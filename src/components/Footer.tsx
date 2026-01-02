@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Youtube, Mail } from "lucide-react";
-import logo from "@/assets/logo.png";
+import { Droplets, Facebook, Instagram, Youtube, Mail } from "lucide-react";
 
 const footerLinks = {
   produtos: [
@@ -30,12 +29,18 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
-            <Link to="/" className="mb-4 inline-block">
-              <img 
-                src={logo} 
-                alt="Piscinas Inteligentes" 
-                className="h-12 w-auto object-contain brightness-0 invert"
-              />
+            <Link to="/" className="flex items-center gap-2 mb-4">
+              <div className="w-10 h-10 rounded-xl bg-gradient-water flex items-center justify-center">
+                <Droplets className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <div>
+                <span className="font-display text-lg font-semibold">
+                  Piscinas
+                </span>
+                <span className="font-display text-lg font-semibold text-primary">
+                  {" "}Inteligentes
+                </span>
+              </div>
             </Link>
             <p className="text-background/70 text-sm mb-6">
               Transformando espaços em oásis de relaxamento desde 2015.
