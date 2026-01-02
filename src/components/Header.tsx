@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ShoppingCart, Menu, X, Droplets } from "lucide-react";
-import { useCartStore } from "@/stores/cartStore";
+import { Menu } from "lucide-react";
 import { CartDrawer } from "./CartDrawer";
+import logo from "@/assets/logo.png";
 
 const navLinks = [
   { href: "/", label: "Início" },
@@ -17,25 +17,18 @@ const navLinks = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const totalItems = useCartStore((state) => state.getTotalItems());
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-water flex items-center justify-center shadow-soft group-hover:shadow-glow transition-shadow duration-300">
-              <Droplets className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <div className="hidden sm:block">
-              <span className="font-display text-lg font-semibold text-foreground">
-                Piscinas
-              </span>
-              <span className="font-display text-lg font-semibold text-gradient">
-                {" "}Inteligentes
-              </span>
-            </div>
+          <Link to="/" className="flex items-center group">
+            <img 
+              src={logo} 
+              alt="Piscinas Inteligentes" 
+              className="h-10 md:h-12 w-auto object-contain"
+            />
           </Link>
 
           {/* Desktop Navigation */}
@@ -68,14 +61,11 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-80 bg-background">
                 <div className="flex flex-col gap-6 mt-8">
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-water flex items-center justify-center">
-                      <Droplets className="w-5 h-5 text-primary-foreground" />
-                    </div>
-                    <span className="font-display text-lg font-semibold">
-                      Piscinas Inteligentes
-                    </span>
-                  </div>
+                  <img 
+                    src={logo} 
+                    alt="Piscinas Inteligentes" 
+                    className="h-12 w-auto object-contain"
+                  />
 
                   <nav className="flex flex-col gap-4">
                     {navLinks.map((link) => (
