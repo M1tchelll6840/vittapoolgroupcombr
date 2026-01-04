@@ -15,7 +15,7 @@ const footerLinks = {
     { label: "Trabalhe Conosco", href: "#" },
   ],
   suporte: [
-    { label: "FAQ", href: "/#faq" },
+    { label: "Perguntas Frequentes", href: "/faq" },
     { label: "Envio e Entrega", href: "/envio-entrega" },
     { label: "Trocas e Devoluções", href: "/trocas-devolucoes" },
     { label: "Pagamentos", href: "/pagamentos" },

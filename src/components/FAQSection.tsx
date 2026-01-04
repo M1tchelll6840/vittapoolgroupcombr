@@ -1,10 +1,12 @@
+import { Link } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { HelpCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { HelpCircle, ArrowRight } from "lucide-react";
 
 const faqs = [
   {
@@ -88,6 +90,16 @@ export function FAQSection() {
               </AccordionItem>
             ))}
           </Accordion>
+
+          {/* Link to full FAQ page */}
+          <div className="text-center mt-10">
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/faq" className="group">
+                Ver todas as perguntas
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>

@@ -12,6 +12,7 @@ import TermosPage from "./pages/TermosPage";
 import TrocasPage from "./pages/TrocasPage";
 import EnvioPage from "./pages/EnvioPage";
 import PagamentosPage from "./pages/PagamentosPage";
+import FAQPage from "./pages/FAQPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/trocas-devolucoes" element={<TrocasPage />} />
           <Route path="/envio-entrega" element={<EnvioPage />} />
           <Route path="/pagamentos" element={<PagamentosPage />} />
+          <Route path="/faq" element={<FAQPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
