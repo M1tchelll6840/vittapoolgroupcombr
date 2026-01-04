@@ -8,11 +8,11 @@ import { CartDrawer } from "./CartDrawer";
 
 const navLinks = [
   { href: "/", label: "Início" },
+  { href: "/sobre", label: "Sobre Nós" },
   { href: "/#categorias", label: "Categorias" },
-  { href: "/#apartamentos", label: "Para Apartamentos" },
-  { href: "/#meditacao", label: "Meditação" },
+  { href: "/#produtos", label: "Produtos" },
   { href: "/#depoimentos", label: "Depoimentos" },
-  { href: "/#faq", label: "FAQ" },
+  { href: "/contato", label: "Contato" },
 ];
 
 export function Header() {

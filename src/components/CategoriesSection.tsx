@@ -42,13 +42,13 @@ export function CategoriesSection() {
         {/* Header */}
         <div className="text-center mb-12">
           <span className="text-sm font-medium text-primary uppercase tracking-wider">
-            Nossas Categorias
+            O Que Oferecemos
           </span>
           <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
-            Encontre a solução <span className="text-gradient">perfeita</span> para você
+            Soluções para <span className="text-gradient">lazer e bem-estar</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            De piscinas familiares a baldes terapêuticos, oferecemos soluções inovadoras para transformar seu espaço em um ambiente de bem-estar.
+            Piscinas de PVC, piscinas infláveis e não infláveis, banheiras e baldes de meditação. Tudo para transformar seu espaço em um ambiente de relaxamento.
           </p>
         </div>
 

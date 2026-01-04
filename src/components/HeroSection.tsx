@@ -30,20 +30,19 @@ export function HeroSection() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6 animate-fade-in">
             <Waves className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-primary">
-              Premium & Acessível
+              Lazer & Bem-Estar
             </span>
           </div>
 
           {/* Title */}
           <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6 animate-fade-in delay-100">
             Transforme seu espaço em um
-            <span className="text-gradient"> oásis de relaxamento</span>
+            <span className="text-gradient"> refúgio de lazer, bem-estar e relaxamento</span>
           </h1>
 
           {/* Description */}
           <p className="text-lg md:text-xl text-muted-foreground mb-8 animate-fade-in delay-200 max-w-xl">
-            Piscinas de PVC, infláveis premium, banheiras de meditação e baldes terapêuticos. 
-            Inovação e qualidade para seu espaço.
+            Piscinas modernas, banheiras de meditação e soluções inteligentes para quem busca mais qualidade de vida em casa.
           </p>
 
           {/* CTAs */}
