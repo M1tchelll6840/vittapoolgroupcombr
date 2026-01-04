@@ -28,8 +28,8 @@ const categories = [
   },
   {
     id: "immersion",
-    title: "Imersão & Meditação",
-    description: "Balcões de imersão para bem-estar e mindfulness",
+    title: "Baldes Terapêuticos",
+    description: "Soluções para bem-estar, meditação e mindfulness",
     image: categoryImmersion,
     color: "from-accent-glow/80 to-accent/80",
   },
@@ -45,10 +45,10 @@ export function CategoriesSection() {
             Nossas Categorias
           </span>
           <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
-            Encontre a piscina <span className="text-gradient">perfeita</span> para você
+            Encontre a solução <span className="text-gradient">perfeita</span> para você
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Desde piscinas familiares até banheiras de meditação, temos a solução ideal para transformar seu espaço.
+            De piscinas familiares a baldes terapêuticos, oferecemos soluções inovadoras para transformar seu espaço em um ambiente de bem-estar.
           </p>
         </div>
 

@@ -42,8 +42,8 @@ export function HeroSection() {
 
           {/* Description */}
           <p className="text-lg md:text-xl text-muted-foreground mb-8 animate-fade-in delay-200 max-w-xl">
-            Piscinas de PVC, infláveis premium e banheiras de meditação. 
-            Qualidade que cabe no seu espaço e no seu bolso.
+            Piscinas de PVC, infláveis premium, banheiras de meditação e baldes terapêuticos. 
+            Inovação e qualidade para seu espaço.
           </p>
 
           {/* CTAs */}

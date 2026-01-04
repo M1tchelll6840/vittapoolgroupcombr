@@ -30,10 +30,10 @@ export function Header() {
             </div>
             <div className="hidden sm:block">
               <span className="font-display text-lg font-semibold text-foreground">
-                Piscinas
+                Vitta
               </span>
               <span className="font-display text-lg font-semibold text-gradient">
-                {" "}Inteligentes
+                Pool Group
               </span>
             </div>
           </Link>
@@ -73,7 +73,7 @@ export function Header() {
                       <Droplets className="w-5 h-5 text-primary-foreground" />
                     </div>
                     <span className="font-display text-lg font-semibold">
-                      Piscinas Inteligentes
+                      VittaPool Group
                     </span>
                   </div>
 

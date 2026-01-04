@@ -6,7 +6,7 @@ const footerLinks = {
     { label: "Piscinas de PVC", href: "#pvc" },
     { label: "Piscinas Infláveis", href: "#inflatable" },
     { label: "Banheiras Spa", href: "#bathtub" },
-    { label: "Imersão", href: "#immersion" },
+    { label: "Baldes Terapêuticos", href: "#immersion" },
   ],
   empresa: [
     { label: "Sobre Nós", href: "#" },
@@ -35,15 +35,15 @@ export function Footer() {
               </div>
               <div>
                 <span className="font-display text-lg font-semibold">
-                  Piscinas
+                  Vitta
                 </span>
                 <span className="font-display text-lg font-semibold text-primary">
-                  {" "}Inteligentes
+                  Pool Group
                 </span>
               </div>
             </Link>
             <p className="text-background/70 text-sm mb-6">
-              Transformando espaços em oásis de relaxamento desde 2015.
+              Soluções inteligentes para lazer, bem-estar e relaxamento desde 2015.
             </p>
             <div className="flex gap-3">
               <a
@@ -140,7 +140,7 @@ export function Footer() {
         {/* Bottom */}
         <div className="pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-background/50">
-            © 2025 Piscinas Inteligentes. Todos os direitos reservados.
+            © 2025 VittaPool Group. Todos os direitos reservados.
           </p>
           <div className="flex gap-6 text-sm text-background/50">
             <a href="#" className="hover:text-primary transition-colors">
