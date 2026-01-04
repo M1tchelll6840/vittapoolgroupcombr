@@ -3,22 +3,22 @@ import { Droplets, Facebook, Instagram, Youtube, Mail } from "lucide-react";
 
 const footerLinks = {
   produtos: [
-    { label: "Piscinas de PVC", href: "#pvc" },
-    { label: "Piscinas Infláveis", href: "#inflatable" },
-    { label: "Banheiras Spa", href: "#bathtub" },
-    { label: "Baldes Terapêuticos", href: "#immersion" },
+    { label: "Piscinas de PVC", href: "/#categorias" },
+    { label: "Piscinas Infláveis", href: "/#categorias" },
+    { label: "Banheiras Spa", href: "/#categorias" },
+    { label: "Baldes Terapêuticos", href: "/#categorias" },
   ],
   empresa: [
-    { label: "Sobre Nós", href: "#" },
+    { label: "Sobre Nós", href: "/sobre" },
+    { label: "Contato", href: "/contato" },
     { label: "Blog", href: "#" },
     { label: "Trabalhe Conosco", href: "#" },
-    { label: "Contato", href: "#contato" },
   ],
   suporte: [
-    { label: "FAQ", href: "#faq" },
-    { label: "Entrega", href: "#" },
-    { label: "Trocas e Devoluções", href: "#" },
-    { label: "Garantia", href: "#" },
+    { label: "FAQ", href: "/#faq" },
+    { label: "Envio e Entrega", href: "/envio-entrega" },
+    { label: "Trocas e Devoluções", href: "/trocas-devolucoes" },
+    { label: "Pagamentos", href: "/pagamentos" },
   ],
 };
 
@@ -143,10 +143,10 @@ export function Footer() {
             © 2025 VittaPool Group. Todos os direitos reservados.
           </p>
           <div className="flex gap-6 text-sm text-background/50">
-            <a href="#" className="hover:text-primary transition-colors">
+            <a href="/termos" className="hover:text-primary transition-colors">
               Termos de Uso
             </a>
-            <a href="#" className="hover:text-primary transition-colors">
+            <a href="/privacidade" className="hover:text-primary transition-colors">
               Privacidade
             </a>
           </div>
