@@ -33,7 +33,7 @@ export function ContactSection() {
             </h2>
             <p className="text-muted-foreground mb-8">
               Tem dúvidas ou quer um orçamento personalizado? Nossa equipe está 
-              pronta para ajudar você a encontrar a piscina perfeita.
+              pronta para ajudar você a encontrar a solução ideal para seu bem-estar.
             </p>
 
             {/* Contact Info */}
@@ -54,7 +54,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium">contato@piscinasinteligentes.com.br</p>
+                  <p className="font-medium">contato@vittapoolgroup.com.br</p>
                 </div>
               </div>
 
@@ -129,7 +129,7 @@ export function ContactSection() {
                   <option value="pvc">Piscina de PVC</option>
                   <option value="inflavel">Piscina Inflável</option>
                   <option value="banheira">Banheira Spa</option>
-                  <option value="imersao">Balcão de Imersão</option>
+                  <option value="balde">Balde Terapêutico</option>
                   <option value="outro">Outro</option>
                 </select>
               </div>
