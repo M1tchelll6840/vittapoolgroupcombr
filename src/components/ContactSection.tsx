@@ -44,7 +44,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Telefone</p>
-                  <p className="font-medium">(11) 99999-9999</p>
+                  <p className="font-medium">(71) 99106-7761</p>
                 </div>
               </div>
 
@@ -72,7 +72,7 @@ export function ContactSection() {
             {/* WhatsApp Button */}
             <Button variant="accent" size="lg" className="mt-8" asChild>
               <a
-                href="https://wa.me/5511999999999"
+                href="https://wa.me/5571991067761"
                 target="_blank"
                 rel="noopener noreferrer"
               >

@@ -192,4 +192,14 @@ piscina pvc familia, piscina resistente quintal, piscina armação metalica, pis
 
 ---
 
+## 7. Informações da Loja Amazon
+
+| Campo | Valor |
+|-------|-------|
+| **Store ID** | piscinasintel-20 |
+| **Link da Loja** | amazon.com.br/stores/page/piscinasintel-20 |
+| **Marca** | VittaPool Group |
+
+---
+
 *Template oficial VittaPool Group para Amazon - Atualizado em Janeiro/2025*

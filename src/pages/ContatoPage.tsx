@@ -82,12 +82,12 @@ export default function ContatoPage() {
                 </div>
                 <h3 className="font-semibold mb-2">WhatsApp</h3>
                 <a 
-                  href="https://wa.me/5511999999999" 
+                  href="https://wa.me/5571991067761" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-accent hover:underline text-sm"
                 >
-                  Iniciar Conversa
+                  (71) 99106-7761
                 </a>
               </div>
 
