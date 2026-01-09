@@ -64,7 +64,7 @@ export function ContactSection() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Localização</p>
-                  <p className="font-medium">São Paulo, SP - Brasil</p>
+                  <p className="font-medium">Salvador Shopping – Salvador, BA</p>
                 </div>
               </div>
             </div>
