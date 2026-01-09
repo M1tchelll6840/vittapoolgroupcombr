@@ -7,6 +7,9 @@ export const COMPANY_INFO = {
   whatsappLink: "https://wa.me/5571991067761",
   amazonStoreId: "piscinasintel-20",
   amazonStoreLink: "https://amazon.com.br/stores/page/piscinasintel-20",
-  location: "Salvador, BA - Brasil",
+  address: "Avenida Tancredo Neves, 3133 – Caminho das Árvores",
+  city: "Salvador – BA, Brasil",
+  cep: "41820-021",
+  location: "Salvador Shopping, Salvador – BA",
   hours: "Seg - Sex: 9h às 18h"
 } as const;
