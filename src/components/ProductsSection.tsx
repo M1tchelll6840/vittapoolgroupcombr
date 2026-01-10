@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ShopifyProduct, fetchProducts } from "@/lib/shopify";
+import { ShopifyProduct, fetchProducts, createBuyNowCheckout } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingCart, Package, ArrowRight } from "lucide-react";
+import { ShoppingCart, Package, ExternalLink, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export function ProductsSection() {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [buyingProductId, setBuyingProductId] = useState<string | null>(null);
   const addItem = useCartStore((state) => state.addItem);
-  const setCartOpen = useCartStore((state) => state.setOpen);
 
   useEffect(() => {
     async function loadProducts() {
@@ -38,6 +38,21 @@ export function ProductsSection() {
     toast.success("Produto adicionado ao carrinho!", {
       position: "top-center",
     });
+  };
+
+  const handleBuyNow = async (product: ShopifyProduct) => {
+    const variant = product.node.variants.edges[0]?.node;
+    if (!variant) return;
+
+    setBuyingProductId(product.node.id);
+    try {
+      const checkoutUrl = await createBuyNowCheckout(variant.id, 1);
+      window.open(checkoutUrl, '_blank');
+    } catch (error) {
+      toast.error("Erro ao criar checkout", { position: "top-center" });
+    } finally {
+      setBuyingProductId(null);
+    }
   };
 
   return (
@@ -99,6 +114,8 @@ export function ProductsSection() {
             {products.map((product, index) => {
               const firstImage = product.node.images.edges[0]?.node;
               const price = product.node.priceRange.minVariantPrice;
+              const amazonLink = product.node.amazonLink?.value;
+              const isBuying = buyingProductId === product.node.id;
 
               return (
                 <div
@@ -135,21 +152,59 @@ export function ProductsSection() {
                       {product.node.description}
                     </p>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-3">
                       <span className="text-lg font-bold text-gradient">
                         R$ {parseFloat(price.amount).toFixed(2)}
                       </span>
                     </div>
 
-                    <Button
-                      variant="water"
-                      size="sm"
-                      className="w-full mt-3"
-                      onClick={() => handleAddToCart(product)}
-                    >
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      Adicionar
-                    </Button>
+                    {/* Botões de Ação */}
+                    <div className="space-y-2">
+                      {/* Linha 1: Adicionar + Compre Agora */}
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => handleAddToCart(product)}
+                        >
+                          <ShoppingCart className="w-4 h-4 mr-1" />
+                          Adicionar
+                        </Button>
+                        <Button
+                          variant="hero"
+                          size="sm"
+                          className="flex-1"
+                          onClick={() => handleBuyNow(product)}
+                          disabled={isBuying}
+                        >
+                          {isBuying ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            "Compre Agora"
+                          )}
+                        </Button>
+                      </div>
+
+                      {/* Linha 2: Ver Na Amazon (apenas se tiver link) */}
+                      {amazonLink && (
+                        <Button
+                          variant="amazon"
+                          size="sm"
+                          className="w-full"
+                          asChild
+                        >
+                          <a
+                            href={amazonLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Ver Na Amazon
+                            <ExternalLink className="w-4 h-4 ml-2" />
+                          </a>
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               );

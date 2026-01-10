@@ -46,6 +46,9 @@ export interface ShopifyProduct {
       name: string;
       values: string[];
     }>;
+    amazonLink?: {
+      value: string;
+    } | null;
   };
 }
 
@@ -92,6 +95,9 @@ const STOREFRONT_QUERY = `
           options {
             name
             values
+          }
+          amazonLink: metafield(namespace: "spreadr", key: "amazon_link") {
+            value
           }
         }
       }
@@ -140,6 +146,9 @@ const PRODUCT_BY_HANDLE_QUERY = `
       options {
         name
         values
+      }
+      amazonLink: metafield(namespace: "spreadr", key: "amazon_link") {
+        value
       }
     }
   }
@@ -299,4 +308,36 @@ export function formatPrice(amount: string, currencyCode: string): string {
     style: 'currency',
     currency: currencyCode,
   }).format(num);
+}
+
+// Função para compra direta (Buy Now) - cria checkout com item único
+export async function createBuyNowCheckout(variantId: string, quantity: number = 1): Promise<string> {
+  try {
+    const lines = [{ quantity, merchandiseId: variantId }];
+
+    const cartData = await storefrontApiRequest(CART_CREATE_MUTATION, {
+      input: { lines },
+    });
+
+    if (!cartData) {
+      throw new Error('Failed to create cart');
+    }
+
+    if (cartData.data.cartCreate.userErrors.length > 0) {
+      throw new Error(`Cart creation failed: ${cartData.data.cartCreate.userErrors.map((e: { message: string }) => e.message).join(', ')}`);
+    }
+
+    const cart = cartData.data.cartCreate.cart;
+    
+    if (!cart.checkoutUrl) {
+      throw new Error('No checkout URL returned from Shopify');
+    }
+
+    const url = new URL(cart.checkoutUrl);
+    url.searchParams.set('channel', 'online_store');
+    return url.toString();
+  } catch (error) {
+    console.error('Error creating buy now checkout:', error);
+    throw error;
+  }
 }
