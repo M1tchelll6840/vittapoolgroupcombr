@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import categoryInflatable from "@/assets/category-inflatable.jpg";
 import categoryPvc from "@/assets/category-pvc.jpg";
-import categoryBathtub from "@/assets/category-bathtub.jpg";
-import categoryImmersion from "@/assets/category-immersion.jpg";
+import categoryTowableFloat from "@/assets/category-towable-float.jpg";
+import categoryTanningLounger from "@/assets/category-tanning-lounger.jpg";
 
 const categories = [
   {
@@ -20,17 +20,17 @@ const categories = [
     color: "from-accent/80 to-accent-glow/80",
   },
   {
-    id: "bathtub",
-    title: "Banheiras Spa",
-    description: "Relaxamento premium no conforto da sua casa",
-    image: categoryBathtub,
+    id: "towable",
+    title: "Boias Infláveis Rebocáveis",
+    description: "Diversão aquática para toda a família",
+    image: categoryTowableFloat,
     color: "from-primary-deep/80 to-primary/80",
   },
   {
-    id: "immersion",
-    title: "Baldes Terapêuticos",
-    description: "Soluções para bem-estar, meditação e mindfulness",
-    image: categoryImmersion,
+    id: "lounger",
+    title: "Espreguiçadeira de Bronzeamento",
+    description: "Relaxe e bronze sob o sol com conforto",
+    image: categoryTanningLounger,
     color: "from-accent-glow/80 to-accent/80",
   },
 ];
