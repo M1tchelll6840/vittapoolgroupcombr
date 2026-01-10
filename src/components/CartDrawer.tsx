@@ -43,10 +43,18 @@ export function CartDrawer() {
   return (
     <Sheet open={isOpen} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="relative">
-          <ShoppingCart className="h-5 w-5" />
+        <Button 
+          variant="outline" 
+          size="icon" 
+          className="relative min-w-[44px] min-h-[44px]"
+          aria-label={`Carrinho de compras${totalItems > 0 ? `, ${totalItems} ${totalItems === 1 ? 'item' : 'itens'}` : ''}`}
+        >
+          <ShoppingCart className="h-5 w-5" aria-hidden="true" />
           {totalItems > 0 && (
-            <Badge className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-accent text-accent-foreground">
+            <Badge 
+              className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs bg-accent text-accent-foreground"
+              aria-hidden="true"
+            >
               {totalItems}
             </Badge>
           )}
@@ -67,7 +75,7 @@ export function CartDrawer() {
           {items.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto mb-4" aria-hidden="true" />
                 <p className="text-muted-foreground">Seu carrinho está vazio</p>
               </div>
             </div>
@@ -75,9 +83,9 @@ export function CartDrawer() {
             <>
               {/* Scrollable items area */}
               <div className="flex-1 overflow-y-auto pr-2 min-h-0">
-                <div className="space-y-4">
+                <ul className="space-y-4" role="list" aria-label="Itens no carrinho">
                   {items.map((item) => (
-                    <div
+                    <li
                       key={item.variantId}
                       className="flex gap-4 p-3 bg-secondary/30 rounded-xl"
                     >
@@ -87,6 +95,9 @@ export function CartDrawer() {
                             src={item.product.node.images.edges[0].node.url}
                             alt={item.product.node.title}
                             className="w-full h-full object-cover"
+                            loading="lazy"
+                            width={64}
+                            height={64}
                           />
                         )}
                       </div>
@@ -109,41 +120,44 @@ export function CartDrawer() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6 text-destructive"
+                          className="h-8 w-8 min-w-[44px] min-h-[44px] text-destructive"
                           onClick={() => removeItem(item.variantId)}
+                          aria-label={`Remover ${item.product.node.title} do carrinho`}
                         >
-                          <Trash2 className="h-3 w-3" />
+                          <Trash2 className="h-4 w-4" aria-hidden="true" />
                         </Button>
 
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1" role="group" aria-label={`Quantidade de ${item.product.node.title}`}>
                           <Button
                             variant="outline"
                             size="icon"
-                            className="h-6 w-6"
+                            className="h-8 w-8 min-w-[44px] min-h-[44px]"
                             onClick={() =>
                               updateQuantity(item.variantId, item.quantity - 1)
                             }
+                            aria-label={`Diminuir quantidade de ${item.product.node.title}`}
                           >
-                            <Minus className="h-3 w-3" />
+                            <Minus className="h-3 w-3" aria-hidden="true" />
                           </Button>
-                          <span className="w-8 text-center text-sm font-medium">
+                          <span className="w-8 text-center text-sm font-medium" aria-label={`Quantidade: ${item.quantity}`}>
                             {item.quantity}
                           </span>
                           <Button
                             variant="outline"
                             size="icon"
-                            className="h-6 w-6"
+                            className="h-8 w-8 min-w-[44px] min-h-[44px]"
                             onClick={() =>
                               updateQuantity(item.variantId, item.quantity + 1)
                             }
+                            aria-label={`Aumentar quantidade de ${item.product.node.title}`}
                           >
-                            <Plus className="h-3 w-3" />
+                            <Plus className="h-3 w-3" aria-hidden="true" />
                           </Button>
                         </div>
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
 
               {/* Fixed checkout section */}
@@ -158,18 +172,18 @@ export function CartDrawer() {
                 <Button
                   onClick={handleCheckout}
                   variant="hero"
-                  className="w-full"
+                  className="w-full min-h-[44px]"
                   size="lg"
                   disabled={items.length === 0 || isLoading}
                 >
                   {isLoading ? (
                     <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" aria-hidden="true" />
                       Processando...
                     </>
                   ) : (
                     <>
-                      <ExternalLink className="w-4 h-4 mr-2" />
+                      <ExternalLink className="w-4 h-4 mr-2" aria-hidden="true" />
                       Finalizar Compra
                     </>
                   )}

@@ -37,14 +37,14 @@ const categories = [
 
 export function CategoriesSection() {
   return (
-    <section id="categorias" className="py-20 bg-background">
+    <section id="categorias" className="py-20 bg-background" aria-labelledby="categorias-titulo">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
           <span className="text-sm font-medium text-primary uppercase tracking-wider">
             O Que Oferecemos
           </span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
+          <h2 id="categorias-titulo" className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
             Soluções para <span className="text-gradient">lazer e bem-estar</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -58,14 +58,18 @@ export function CategoriesSection() {
             <a
               key={category.id}
               href={`#${category.id}`}
-              className="group relative h-72 rounded-2xl overflow-hidden shadow-card hover:shadow-elevated transition-all duration-500 animate-fade-in"
+              className="group relative h-72 rounded-2xl overflow-hidden shadow-card hover:shadow-elevated transition-all duration-500 animate-fade-in min-h-[44px]"
               style={{ animationDelay: `${index * 100}ms` }}
+              aria-label={`Ver categoria ${category.title}`}
             >
               {/* Image */}
               <img
                 src={category.image}
-                alt={category.title}
+                alt={`${category.title} - ${category.description}`}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                loading="lazy"
+                width={400}
+                height={288}
               />
 
               {/* Overlay */}
@@ -82,7 +86,7 @@ export function CategoriesSection() {
               </div>
 
               {/* Hover effect */}
-              <div className="absolute inset-0 border-2 border-primary-foreground/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 border-2 border-primary-foreground/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true" />
             </a>
           ))}
         </div>

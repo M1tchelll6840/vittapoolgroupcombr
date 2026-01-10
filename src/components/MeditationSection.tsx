@@ -23,17 +23,17 @@ const benefits = [
 
 export function MeditationSection() {
   return (
-    <section id="diversao" className="py-20 bg-gradient-hero overflow-hidden">
+    <section id="diversao" className="py-20 bg-gradient-hero overflow-hidden" aria-labelledby="diversao-titulo">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-4">
-            <Sparkles className="w-4 h-4 text-accent" />
+            <Sparkles className="w-4 h-4 text-accent" aria-hidden="true" />
             <span className="text-sm font-medium text-accent">
               Lazer & Diversão
             </span>
           </div>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+          <h2 id="diversao-titulo" className="font-display text-3xl md:text-4xl font-bold mb-4">
             Diversão e <span className="text-gradient">relaxamento</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -48,8 +48,11 @@ export function MeditationSection() {
           <div className="relative rounded-2xl overflow-hidden shadow-elevated group">
             <img
               src={categoryTowableFloat}
-              alt="Boia inflável rebocável"
+              alt="Boia inflável rebocável para diversão aquática em família"
               className="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
+              width={400}
+              height={320}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6">
@@ -71,10 +74,10 @@ export function MeditationSection() {
                 style={{ animationDelay: `${index * 150}ms` }}
               >
                 <div className="w-12 h-12 rounded-xl bg-gradient-water flex items-center justify-center flex-shrink-0 shadow-soft">
-                  <benefit.icon className="w-6 h-6 text-primary-foreground" />
+                  <benefit.icon className="w-6 h-6 text-primary-foreground" aria-hidden="true" />
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-1">{benefit.title}</h4>
+                  <h3 className="font-semibold mb-1">{benefit.title}</h3>
                   <p className="text-sm text-muted-foreground">
                     {benefit.description}
                   </p>
@@ -82,7 +85,7 @@ export function MeditationSection() {
               </div>
             ))}
 
-            <Button variant="accent" size="lg" className="mt-4" asChild>
+            <Button variant="accent" size="lg" className="mt-4 min-h-[44px]" asChild>
               <a href="#produtos">Explorar Coleção Wellness</a>
             </Button>
           </div>
@@ -91,8 +94,11 @@ export function MeditationSection() {
           <div className="relative rounded-2xl overflow-hidden shadow-elevated group">
             <img
               src={categoryTanningLounger}
-              alt="Espreguiçadeira de bronzeamento"
+              alt="Espreguiçadeira inflável de bronzeamento para relaxar na piscina"
               className="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
+              width={400}
+              height={320}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6">

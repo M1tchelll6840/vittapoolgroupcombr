@@ -57,14 +57,14 @@ export function ProductsSection() {
   };
 
   return (
-    <section id="produtos" className="py-20 bg-gradient-surface">
+    <section id="produtos" className="py-20 bg-gradient-surface" aria-labelledby="produtos-titulo">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
           <span className="text-sm font-medium text-primary uppercase tracking-wider">
             Nossos Produtos
           </span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
+          <h2 id="produtos-titulo" className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
             Produtos em <span className="text-gradient">destaque</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -74,11 +74,12 @@ export function ProductsSection() {
 
         {/* Loading State */}
         {loading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" aria-busy="true" aria-label="Carregando produtos">
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
                 className="bg-card rounded-2xl overflow-hidden shadow-card animate-pulse"
+                aria-hidden="true"
               >
                 <div className="aspect-square bg-muted" />
                 <div className="p-4 space-y-3">
@@ -95,7 +96,7 @@ export function ProductsSection() {
         {!loading && products.length === 0 && (
           <div className="text-center py-20">
             <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-muted flex items-center justify-center">
-              <Package className="w-10 h-10 text-muted-foreground" />
+              <Package className="w-10 h-10 text-muted-foreground" aria-hidden="true" />
             </div>
             <h3 className="font-display text-xl font-semibold mb-2">
               Nenhum produto disponível
@@ -103,7 +104,7 @@ export function ProductsSection() {
             <p className="text-muted-foreground mb-6 max-w-md mx-auto">
               Estamos preparando nosso catálogo. Em breve você encontrará as melhores piscinas e banheiras aqui!
             </p>
-            <Button variant="hero" asChild>
+            <Button variant="hero" className="min-h-[44px]" asChild>
               <a href="#contato">Solicitar Catálogo</a>
             </Button>
           </div>
@@ -111,7 +112,7 @@ export function ProductsSection() {
 
         {/* Products Grid */}
         {!loading && products.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" role="list" aria-label="Lista de produtos">
             {products.map((product, index) => {
               const firstImage = product.node.images.edges[0]?.node;
               const price = product.node.priceRange.minVariantPrice;
@@ -119,10 +120,11 @@ export function ProductsSection() {
               const isBuying = buyingProductId === product.node.id;
 
               return (
-                <div
+                <article
                   key={product.node.id}
                   className="group bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elevated transition-all duration-300 animate-fade-in"
                   style={{ animationDelay: `${index * 50}ms` }}
+                  role="listitem"
                 >
                   {/* Image */}
                   <Link to={`/produto/${product.node.handle}`}>
@@ -132,10 +134,13 @@ export function ProductsSection() {
                           src={firstImage.url}
                           alt={firstImage.altText || product.node.title}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                          width={400}
+                          height={400}
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
-                          <Package className="w-12 h-12 text-muted-foreground" />
+                          <Package className="w-12 h-12 text-muted-foreground" aria-hidden="true" />
                         </div>
                       )}
                     </div>
@@ -166,21 +171,23 @@ export function ProductsSection() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex-1"
+                          className="flex-1 min-h-[44px]"
                           onClick={() => handleAddToCart(product)}
+                          aria-label={`Adicionar ${product.node.title} ao carrinho`}
                         >
-                          <ShoppingCart className="w-4 h-4 mr-1" />
+                          <ShoppingCart className="w-4 h-4 mr-1" aria-hidden="true" />
                           Adicionar
                         </Button>
                         <Button
                           variant="hero"
                           size="sm"
-                          className="flex-1"
+                          className="flex-1 min-h-[44px]"
                           onClick={() => handleBuyNow(product)}
                           disabled={isBuying}
+                          aria-label={`Comprar ${product.node.title} agora`}
                         >
                           {isBuying ? (
-                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
                           ) : (
                             "Compre Agora"
                           )}
@@ -192,23 +199,24 @@ export function ProductsSection() {
                         <Button
                           variant="amazon"
                           size="sm"
-                          className="w-full"
+                          className="w-full min-h-[44px]"
                           asChild
                         >
                           <a
                             href={amazonLink}
                             target="_blank"
                             rel="noopener noreferrer"
+                            aria-label={`Ver ${product.node.title} na Amazon - abre em nova aba`}
                           >
                             <AmazonIcon className="w-4 h-4 mr-2" />
                             Ver Na Amazon
-                            <ExternalLink className="w-4 h-4 ml-2" />
+                            <ExternalLink className="w-4 h-4 ml-2" aria-hidden="true" />
                           </a>
                         </Button>
                       )}
                     </div>
                   </div>
-                </div>
+                </article>
               );
             })}
           </div>
