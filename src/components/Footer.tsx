@@ -5,8 +5,8 @@ const footerLinks = {
   produtos: [
     { label: "Piscinas de PVC", href: "/#categorias" },
     { label: "Piscinas Infláveis", href: "/#categorias" },
-    { label: "Banheiras Spa", href: "/#categorias" },
-    { label: "Baldes Terapêuticos", href: "/#categorias" },
+    { label: "Boias Rebocáveis", href: "/#categorias" },
+    { label: "Espreguiçadeira Inflável", href: "/#categorias" },
   ],
   empresa: [
     { label: "Sobre Nós", href: "/sobre" },
