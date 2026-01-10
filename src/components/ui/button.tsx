@@ -18,6 +18,7 @@ const buttonVariants = cva(
         water: "bg-gradient-water text-primary-foreground hover:shadow-glow hover:scale-[1.02] active:scale-[0.98]",
         hero: "bg-gradient-water text-primary-foreground hover:shadow-glow hover:scale-[1.02] active:scale-[0.98] text-base font-semibold",
         accent: "bg-accent text-accent-foreground hover:bg-accent-glow shadow-soft hover:shadow-elevated",
+        amazon: "bg-[#FF9900] text-black hover:bg-[#FFB84D] font-semibold shadow-soft hover:shadow-elevated hover:scale-[1.02] active:scale-[0.98]",
       },
       size: {
         default: "h-10 px-4 py-2",

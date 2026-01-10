@@ -3,9 +3,9 @@ import { useParams, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { fetchProductByHandle } from "@/lib/shopify";
+import { fetchProductByHandle, createBuyNowCheckout } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingCart, ArrowLeft, Package, Minus, Plus, Truck, Shield, RotateCcw } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Package, Minus, Plus, Truck, Shield, RotateCcw, ExternalLink, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export default function ProductPage() {
@@ -15,6 +15,7 @@ export default function ProductPage() {
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isBuying, setIsBuying] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
@@ -42,6 +43,19 @@ export default function ProductPage() {
       selectedOptions: selectedVariant.selectedOptions || [],
     });
     toast.success("Produto adicionado ao carrinho!", { position: "top-center" });
+  };
+
+  const handleBuyNow = async () => {
+    if (!selectedVariant) return;
+    setIsBuying(true);
+    try {
+      const checkoutUrl = await createBuyNowCheckout(selectedVariant.id, quantity);
+      window.open(checkoutUrl, '_blank');
+    } catch (error) {
+      toast.error("Erro ao criar checkout", { position: "top-center" });
+    } finally {
+      setIsBuying(false);
+    }
   };
 
   if (loading) {
@@ -79,6 +93,7 @@ export default function ProductPage() {
 
   const images = product.images?.edges || [];
   const price = selectedVariant?.price || product.priceRange.minVariantPrice;
+  const amazonLink = product.amazonLink?.value;
 
   return (
     <div className="min-h-screen bg-background">
@@ -125,9 +140,36 @@ export default function ProductPage() {
               </div>
             </div>
 
-            <Button variant="hero" size="xl" className="w-full mb-8" onClick={handleAddToCart}>
-              <ShoppingCart className="w-5 h-5 mr-2" /> Adicionar ao Carrinho
-            </Button>
+            {/* Botões de Ação */}
+            <div className="space-y-3 mb-8">
+              {/* Linha 1: Adicionar + Compre Agora */}
+              <div className="flex gap-3">
+                <Button variant="outline" size="xl" className="flex-1" onClick={handleAddToCart}>
+                  <ShoppingCart className="w-5 h-5 mr-2" />
+                  Adicionar ao Carrinho
+                </Button>
+                <Button variant="hero" size="xl" className="flex-1" onClick={handleBuyNow} disabled={isBuying}>
+                  {isBuying ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Processando...
+                    </>
+                  ) : (
+                    "Compre Agora"
+                  )}
+                </Button>
+              </div>
+
+              {/* Linha 2: Ver Na Amazon (apenas se tiver link) */}
+              {amazonLink && (
+                <Button variant="amazon" size="xl" className="w-full" asChild>
+                  <a href={amazonLink} target="_blank" rel="noopener noreferrer">
+                    Ver Na Amazon
+                    <ExternalLink className="w-5 h-5 ml-2" />
+                  </a>
+                </Button>
+              )}
+            </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center p-4 bg-secondary/50 rounded-xl">
