@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { fetchProductByHandle, createBuyNowCheckout } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { ShoppingCart, ArrowLeft, Package, Minus, Plus, Truck, Shield, RotateCcw, ExternalLink, Loader2 } from "lucide-react";
+import { AmazonIcon } from "@/components/icons/AmazonIcon";
 import { toast } from "sonner";
 
 export default function ProductPage() {
@@ -164,6 +165,7 @@ export default function ProductPage() {
               {amazonLink && (
                 <Button variant="amazon" size="xl" className="w-full" asChild>
                   <a href={amazonLink} target="_blank" rel="noopener noreferrer">
+                    <AmazonIcon className="w-5 h-5 mr-2" />
                     Ver Na Amazon
                     <ExternalLink className="w-5 h-5 ml-2" />
                   </a>

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ShopifyProduct, fetchProducts, createBuyNowCheckout } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { ShoppingCart, Package, ExternalLink, Loader2 } from "lucide-react";
+import { AmazonIcon } from "@/components/icons/AmazonIcon";
 import { toast } from "sonner";
 
 export function ProductsSection() {
@@ -199,6 +200,7 @@ export function ProductsSection() {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
+                            <AmazonIcon className="w-4 h-4 mr-2" />
                             Ver Na Amazon
                             <ExternalLink className="w-4 h-4 ml-2" />
                           </a>
