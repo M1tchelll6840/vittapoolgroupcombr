@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ShopifyProduct, fetchProducts, createBuyNowCheckout } from "@/lib/shopify";
+import { ShopifyProduct, fetchProducts, createBuyNowCheckout, openCheckoutUrl, isValidShopifyCheckoutUrl } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { ShoppingCart, Package, ExternalLink, Loader2 } from "lucide-react";
 import { AmazonIcon } from "@/components/icons/AmazonIcon";
@@ -48,9 +48,34 @@ export function ProductsSection() {
     setBuyingProductId(product.node.id);
     try {
       const checkoutUrl = await createBuyNowCheckout(variant.id, 1);
-      window.open(checkoutUrl, '_blank');
+      
+      console.log('[ProductsSection] Checkout URL gerada:', checkoutUrl);
+      
+      // Valida URL antes de abrir
+      if (!isValidShopifyCheckoutUrl(checkoutUrl)) {
+        toast.error("URL de checkout inválida", {
+          description: `URL recebida: ${checkoutUrl}`,
+          position: "top-center",
+          duration: 10000,
+        });
+        return;
+      }
+      
+      // Abre com fallback para popup bloqueado
+      const result = openCheckoutUrl(checkoutUrl);
+      
+      if (!result.success) {
+        toast.error("Erro ao abrir checkout", {
+          description: result.error,
+          position: "top-center",
+        });
+      }
     } catch (error) {
-      toast.error("Erro ao criar checkout", { position: "top-center" });
+      console.error('[ProductsSection] Erro ao criar checkout:', error);
+      toast.error("Erro ao criar checkout", {
+        description: error instanceof Error ? error.message : "Erro desconhecido",
+        position: "top-center",
+      });
     } finally {
       setBuyingProductId(null);
     }
