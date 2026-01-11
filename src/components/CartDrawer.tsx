@@ -8,8 +8,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2, Copy, CheckCircle } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
+import { openCheckoutUrl, isValidShopifyCheckoutUrl, createStorefrontCheckout } from "@/lib/shopify";
+import { toast } from "sonner";
+import { useState } from "react";
 
 export function CartDrawer() {
   const {
@@ -19,24 +22,65 @@ export function CartDrawer() {
     setOpen,
     updateQuantity,
     removeItem,
-    createCheckout,
+    setLoading,
     getTotalItems,
     getTotalPrice,
   } = useCartStore();
+  
+  const [debugUrl, setDebugUrl] = useState<string | null>(null);
 
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
 
+  const handleCopyUrl = () => {
+    if (debugUrl) {
+      navigator.clipboard.writeText(debugUrl);
+      toast.success("URL copiada!", { position: "top-center" });
+    }
+  };
+
   const handleCheckout = async () => {
+    if (items.length === 0) return;
+    
+    setLoading(true);
+    setDebugUrl(null);
+    
     try {
-      await createCheckout();
-      const checkoutUrl = useCartStore.getState().checkoutUrl;
-      if (checkoutUrl) {
-        window.open(checkoutUrl, "_blank");
+      // Gera URL diretamente (não usa estado antigo)
+      const checkoutUrl = await createStorefrontCheckout(items);
+      
+      console.log('[CartDrawer] Checkout URL gerada:', checkoutUrl);
+      setDebugUrl(checkoutUrl);
+      
+      // Valida URL antes de abrir
+      if (!isValidShopifyCheckoutUrl(checkoutUrl)) {
+        toast.error("URL de checkout inválida", {
+          description: `URL recebida: ${checkoutUrl}`,
+          position: "top-center",
+          duration: 10000,
+        });
+        return;
+      }
+      
+      // Abre com fallback para popup bloqueado
+      const result = openCheckoutUrl(checkoutUrl);
+      
+      if (result.success) {
         setOpen(false);
+      } else {
+        toast.error("Erro ao abrir checkout", {
+          description: result.error,
+          position: "top-center",
+        });
       }
     } catch (error) {
-      console.error("Checkout failed:", error);
+      console.error("[CartDrawer] Checkout failed:", error);
+      toast.error("Erro ao criar checkout", {
+        description: error instanceof Error ? error.message : "Erro desconhecido",
+        position: "top-center",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -188,6 +232,23 @@ export function CartDrawer() {
                     </>
                   )}
                 </Button>
+                
+                {/* Debug: Mostra URL gerada */}
+                {debugUrl && (
+                  <div className="p-3 bg-muted rounded-lg text-xs">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3 text-green-500" />
+                        Checkout URL gerada:
+                      </span>
+                      <Button variant="ghost" size="sm" className="h-6 px-2" onClick={handleCopyUrl}>
+                        <Copy className="w-3 h-3 mr-1" />
+                        Copiar
+                      </Button>
+                    </div>
+                    <p className="break-all text-muted-foreground">{debugUrl}</p>
+                  </div>
+                )}
               </div>
             </>
           )}
