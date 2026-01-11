@@ -268,12 +268,47 @@ export interface CartItem {
   }>;
 }
 
+// Valida se URL é checkout válido do Shopify
+export function isValidShopifyCheckoutUrl(url: string): boolean {
+  if (!url || typeof url !== 'string') return false;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
+  // Aceita domínios do Shopify
+  const validDomains = ['myshopify.com', 'shopify.com', 'checkout.shopify.com'];
+  try {
+    const parsed = new URL(url);
+    return validDomains.some(domain => parsed.hostname.includes(domain));
+  } catch {
+    return false;
+  }
+}
+
+// Abre URL de checkout com fallback para bloqueio de popup
+export function openCheckoutUrl(url: string): { success: boolean; error?: string } {
+  console.log('[Shopify Checkout] Tentando abrir URL:', url);
+  
+  if (!isValidShopifyCheckoutUrl(url)) {
+    console.error('[Shopify Checkout] URL inválida:', url);
+    return { success: false, error: `URL de checkout inválida: ${url}` };
+  }
+  
+  const newWindow = window.open(url, '_blank');
+  
+  if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+    console.log('[Shopify Checkout] Popup bloqueado, redirecionando na mesma aba');
+    window.location.href = url;
+  }
+  
+  return { success: true };
+}
+
 export async function createStorefrontCheckout(items: CartItem[]): Promise<string> {
   try {
     const lines = items.map(item => ({
       quantity: item.quantity,
       merchandiseId: item.variantId,
     }));
+
+    console.log('[Shopify Checkout] Criando checkout com items:', lines);
 
     const cartData = await storefrontApiRequest(CART_CREATE_MUTATION, {
       input: { lines },
@@ -283,8 +318,12 @@ export async function createStorefrontCheckout(items: CartItem[]): Promise<strin
       throw new Error('Failed to create cart');
     }
 
+    console.log('[Shopify Checkout] Resposta do Shopify:', cartData.data.cartCreate);
+
     if (cartData.data.cartCreate.userErrors.length > 0) {
-      throw new Error(`Cart creation failed: ${cartData.data.cartCreate.userErrors.map((e: { message: string }) => e.message).join(', ')}`);
+      const errors = cartData.data.cartCreate.userErrors.map((e: { message: string }) => e.message).join(', ');
+      console.error('[Shopify Checkout] userErrors:', errors);
+      throw new Error(`Cart creation failed: ${errors}`);
     }
 
     const cart = cartData.data.cartCreate.cart;
@@ -295,9 +334,13 @@ export async function createStorefrontCheckout(items: CartItem[]): Promise<strin
 
     const url = new URL(cart.checkoutUrl);
     url.searchParams.set('channel', 'online_store');
-    return url.toString();
+    const finalUrl = url.toString();
+    
+    console.log('[Shopify Checkout] URL final gerada:', finalUrl);
+    
+    return finalUrl;
   } catch (error) {
-    console.error('Error creating storefront checkout:', error);
+    console.error('[Shopify Checkout] Erro ao criar checkout:', error);
     throw error;
   }
 }
@@ -315,6 +358,8 @@ export async function createBuyNowCheckout(variantId: string, quantity: number =
   try {
     const lines = [{ quantity, merchandiseId: variantId }];
 
+    console.log('[Shopify BuyNow] Criando checkout para:', { variantId, quantity });
+
     const cartData = await storefrontApiRequest(CART_CREATE_MUTATION, {
       input: { lines },
     });
@@ -323,8 +368,12 @@ export async function createBuyNowCheckout(variantId: string, quantity: number =
       throw new Error('Failed to create cart');
     }
 
+    console.log('[Shopify BuyNow] Resposta do Shopify:', cartData.data.cartCreate);
+
     if (cartData.data.cartCreate.userErrors.length > 0) {
-      throw new Error(`Cart creation failed: ${cartData.data.cartCreate.userErrors.map((e: { message: string }) => e.message).join(', ')}`);
+      const errors = cartData.data.cartCreate.userErrors.map((e: { message: string }) => e.message).join(', ');
+      console.error('[Shopify BuyNow] userErrors:', errors);
+      throw new Error(`Cart creation failed: ${errors}`);
     }
 
     const cart = cartData.data.cartCreate.cart;
@@ -335,9 +384,13 @@ export async function createBuyNowCheckout(variantId: string, quantity: number =
 
     const url = new URL(cart.checkoutUrl);
     url.searchParams.set('channel', 'online_store');
-    return url.toString();
+    const finalUrl = url.toString();
+    
+    console.log('[Shopify BuyNow] URL final gerada:', finalUrl);
+    
+    return finalUrl;
   } catch (error) {
-    console.error('Error creating buy now checkout:', error);
+    console.error('[Shopify BuyNow] Erro ao criar checkout:', error);
     throw error;
   }
 }
