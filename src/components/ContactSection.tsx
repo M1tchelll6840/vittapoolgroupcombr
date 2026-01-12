@@ -4,19 +4,43 @@ import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, MapPin, Send, MessageCircle } from "lucide-react";
 import { useState, useId } from "react";
 import { toast } from "sonner";
+import { validateContactForm } from "@/lib/validation";
 
 export function ContactSection() {
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const formId = useId();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrors({});
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      interest: formData.get("interest") as string,
+      message: formData.get("message") as string,
+    };
+
+    // Validate form data
+    const validation = validateContactForm(data);
+    
+    if (!validation.success) {
+      setErrors(validation.errors || {});
+      toast.error("Por favor, corrija os erros no formulário.");
+      return;
+    }
+
     setLoading(true);
     
-    // Simulate form submission
+    // Note: In production, this should send to a backend API
+    // Currently simulating submission - backend integration needed
     setTimeout(() => {
       toast.success("Mensagem enviada com sucesso! Entraremos em contato em breve.");
       setLoading(false);
+      (e.target as HTMLFormElement).reset();
     }, 1500);
   };
 
@@ -102,11 +126,14 @@ export function ContactSection() {
                   </label>
                   <Input
                     id={`${formId}-nome`}
+                    name="name"
                     placeholder="Seu nome"
                     required
-                    className="rounded-xl min-h-[44px]"
+                    className={`rounded-xl min-h-[44px] ${errors.name ? "border-destructive" : ""}`}
                     autoComplete="name"
+                    maxLength={100}
                   />
+                  {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
                 </div>
                 <div>
                   <label htmlFor={`${formId}-telefone`} className="text-sm font-medium mb-2 block">
@@ -114,12 +141,14 @@ export function ContactSection() {
                   </label>
                   <Input
                     id={`${formId}-telefone`}
+                    name="phone"
                     placeholder="(00) 00000-0000"
-                    required
-                    className="rounded-xl min-h-[44px]"
+                    className={`rounded-xl min-h-[44px] ${errors.phone ? "border-destructive" : ""}`}
                     autoComplete="tel"
                     type="tel"
+                    maxLength={20}
                   />
+                  {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
                 </div>
               </div>
 
@@ -129,12 +158,15 @@ export function ContactSection() {
                 </label>
                 <Input
                   id={`${formId}-email`}
+                  name="email"
                   type="email"
                   placeholder="seu@email.com"
                   required
-                  className="rounded-xl min-h-[44px]"
+                  className={`rounded-xl min-h-[44px] ${errors.email ? "border-destructive" : ""}`}
                   autoComplete="email"
+                  maxLength={255}
                 />
+                {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
               </div>
 
               <div>
@@ -143,6 +175,7 @@ export function ContactSection() {
                 </label>
                 <select 
                   id={`${formId}-interesse`}
+                  name="interest"
                   className="w-full h-11 min-h-[44px] px-3 rounded-xl border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   aria-describedby={`${formId}-interesse-desc`}
                 >
@@ -164,10 +197,13 @@ export function ContactSection() {
                 </label>
                 <Textarea
                   id={`${formId}-mensagem`}
+                  name="message"
                   placeholder="Conte-nos sobre seu projeto ou dúvida..."
                   rows={4}
-                  className="rounded-xl resize-none"
+                  className={`rounded-xl resize-none ${errors.message ? "border-destructive" : ""}`}
+                  maxLength={2000}
                 />
+                {errors.message && <p className="text-xs text-destructive mt-1">{errors.message}</p>}
               </div>
 
               <Button

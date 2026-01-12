@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { validateContactForm } from "@/lib/validation";
 import { 
   Mail, 
   MessageCircle, 
@@ -17,13 +18,39 @@ import {
 
 export default function ContatoPage() {
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrors({});
+
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      subject: formData.get("subject") as string,
+      message: formData.get("message") as string,
+    };
+
+    // Validate form data
+    const validation = validateContactForm(data);
+    
+    if (!validation.success) {
+      setErrors(validation.errors || {});
+      toast({
+        title: "Erro no formulário",
+        description: "Por favor, corrija os campos destacados.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
-    // Simulate form submission
+    // Note: In production, this should send to a backend API
+    // Currently simulating submission - backend integration needed
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     toast({
@@ -32,6 +59,7 @@ export default function ContatoPage() {
     });
 
     setLoading(false);
+    setErrors({});
     (e.target as HTMLFormElement).reset();
   };
 
@@ -130,8 +158,10 @@ export default function ContatoPage() {
                         name="name"
                         placeholder="Seu nome completo"
                         required
-                        className="h-12"
+                        className={`h-12 ${errors.name ? "border-destructive" : ""}`}
+                        maxLength={100}
                       />
+                      {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
                     </div>
                     <div>
                       <label htmlFor="email" className="block text-sm font-medium mb-2">
@@ -143,8 +173,10 @@ export default function ContatoPage() {
                         type="email"
                         placeholder="seu@email.com"
                         required
-                        className="h-12"
+                        className={`h-12 ${errors.email ? "border-destructive" : ""}`}
+                        maxLength={255}
                       />
+                      {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
                     </div>
                   </div>
 
@@ -157,8 +189,10 @@ export default function ContatoPage() {
                       name="phone"
                       type="tel"
                       placeholder="(11) 99999-9999"
-                      className="h-12"
+                      className={`h-12 ${errors.phone ? "border-destructive" : ""}`}
+                      maxLength={20}
                     />
+                    {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
                   </div>
 
                   <div>
@@ -170,8 +204,10 @@ export default function ContatoPage() {
                       name="subject"
                       placeholder="Sobre o que deseja falar?"
                       required
-                      className="h-12"
+                      className={`h-12 ${errors.subject ? "border-destructive" : ""}`}
+                      maxLength={200}
                     />
+                    {errors.subject && <p className="text-xs text-destructive mt-1">{errors.subject}</p>}
                   </div>
 
                   <div>
@@ -184,8 +220,10 @@ export default function ContatoPage() {
                       placeholder="Escreva sua mensagem aqui..."
                       rows={5}
                       required
-                      className="resize-none"
+                      className={`resize-none ${errors.message ? "border-destructive" : ""}`}
+                      maxLength={2000}
                     />
+                    {errors.message && <p className="text-xs text-destructive mt-1">{errors.message}</p>}
                   </div>
 
                   <Button 
