@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { fetchProductByHandle, createBuyNowCheckout, openCheckoutUrl, isValidShopifyCheckoutUrl } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingCart, ArrowLeft, Package, Minus, Plus, Truck, Shield, RotateCcw, ExternalLink, Loader2, AlertTriangle, CheckCircle, Copy } from "lucide-react";
+import { COMPANY_INFO } from "@/lib/constants";
+import { ShoppingCart, ArrowLeft, Package, Minus, Plus, Truck, Shield, RotateCcw, ExternalLink, Loader2, AlertTriangle, CheckCircle, Copy, Zap, MessageCircle, CreditCard, Lock } from "lucide-react";
 import { AmazonIcon } from "@/components/icons/AmazonIcon";
 import { toast } from "sonner";
 
@@ -191,27 +192,53 @@ export default function ProductPage() {
 
             {/* Botões de Ação */}
             <div className="space-y-3 mb-8">
-              {/* Linha 1: Adicionar + Compre Agora */}
+              {/* Botão Principal: WhatsApp (para produtos de alto valor) */}
+              <Button 
+                variant="default" 
+                size="xl" 
+                className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white min-h-[56px] text-base font-semibold shadow-lg hover:shadow-xl transition-all"
+                asChild
+              >
+                <a 
+                  href={`${COMPANY_INFO.whatsappLink}?text=Olá! Tenho interesse no produto: ${encodeURIComponent(product.title)}`}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Falar com Especialista
+                </a>
+              </Button>
+
+              {/* Linha 2: Adicionar + Compre Agora */}
               <div className="flex gap-3">
-                <Button variant="outline" size="xl" className="flex-1" onClick={handleAddToCart}>
+                <Button variant="outline" size="xl" className="flex-1 min-h-[52px]" onClick={handleAddToCart}>
                   <ShoppingCart className="w-5 h-5 mr-2" />
-                  Adicionar ao Carrinho
+                  Adicionar
                 </Button>
-                <Button variant="hero" size="xl" className="flex-1" onClick={handleBuyNow} disabled={isBuying}>
+                <Button 
+                  variant="hero" 
+                  size="xl" 
+                  className="flex-1 min-h-[52px] relative overflow-hidden group/btn"
+                  onClick={handleBuyNow} 
+                  disabled={isBuying}
+                >
                   {isBuying ? (
                     <>
                       <Loader2 className="w-5 h-5 mr-2 animate-spin" />
                       Processando...
                     </>
                   ) : (
-                    "Compre Agora"
+                    <>
+                      <Zap className="w-5 h-5 mr-2 group-hover/btn:animate-pulse" />
+                      Compre Agora
+                    </>
                   )}
                 </Button>
               </div>
 
-              {/* Linha 2: Ver Na Amazon (apenas se tiver link) */}
+              {/* Linha 3: Ver Na Amazon (apenas se tiver link) */}
               {amazonLink && (
-                <Button variant="amazon" size="xl" className="w-full" asChild>
+                <Button variant="amazon" size="xl" className="w-full min-h-[52px]" asChild>
                   <a href={amazonLink} target="_blank" rel="noopener noreferrer">
                     <AmazonIcon className="w-5 h-5 mr-2" />
                     Ver Na Amazon
@@ -219,20 +246,34 @@ export default function ProductPage() {
                   </a>
                 </Button>
               )}
+
+              {/* Badge de Pagamento Seguro */}
+              <div className="flex items-center justify-center gap-3 pt-2">
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Lock className="w-3.5 h-3.5 text-green-600" />
+                  <span>Compra 100% Segura</span>
+                </div>
+                <div className="h-4 w-px bg-border" />
+                <div className="flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-xs text-muted-foreground">Pix • Cartão • PayPal</span>
+                </div>
+              </div>
             </div>
 
+            {/* Trust Badges */}
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center p-4 bg-secondary/50 rounded-xl">
                 <Truck className="w-5 h-5 mx-auto mb-2 text-primary" />
-                <span className="text-xs">Frete Grátis</span>
+                <span className="text-xs font-medium">Frete Grátis</span>
               </div>
               <div className="text-center p-4 bg-secondary/50 rounded-xl">
                 <Shield className="w-5 h-5 mx-auto mb-2 text-primary" />
-                <span className="text-xs">Garantia 2 Anos</span>
+                <span className="text-xs font-medium">Garantia 2 Anos</span>
               </div>
               <div className="text-center p-4 bg-secondary/50 rounded-xl">
                 <RotateCcw className="w-5 h-5 mx-auto mb-2 text-primary" />
-                <span className="text-xs">Troca Fácil</span>
+                <span className="text-xs font-medium">Troca Fácil</span>
               </div>
             </div>
           </div>
