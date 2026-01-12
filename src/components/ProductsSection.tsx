@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShopifyProduct, fetchProducts, createBuyNowCheckout, openCheckoutUrl, isValidShopifyCheckoutUrl } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingCart, Package, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingCart, Package, ExternalLink, Loader2, Zap } from "lucide-react";
 import { AmazonIcon } from "@/components/icons/AmazonIcon";
 import { toast } from "sonner";
 
@@ -206,7 +206,7 @@ export function ProductsSection() {
                         <Button
                           variant="hero"
                           size="sm"
-                          className="flex-1 min-h-[44px]"
+                          className="flex-1 min-h-[44px] group/btn"
                           onClick={() => handleBuyNow(product)}
                           disabled={isBuying}
                           aria-label={`Comprar ${product.node.title} agora`}
@@ -214,7 +214,10 @@ export function ProductsSection() {
                           {isBuying ? (
                             <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
                           ) : (
-                            "Compre Agora"
+                            <>
+                              <Zap className="w-4 h-4 mr-1 group-hover/btn:animate-pulse" aria-hidden="true" />
+                              Comprar
+                            </>
                           )}
                         </Button>
                       </div>
