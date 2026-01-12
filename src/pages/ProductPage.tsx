@@ -3,9 +3,16 @@ import { useParams, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { fetchProductByHandle, createBuyNowCheckout, openCheckoutUrl, isValidShopifyCheckoutUrl } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingCart, ArrowLeft, Package, Minus, Plus, Truck, Shield, RotateCcw, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingCart, ArrowLeft, Package, Minus, Plus, Truck, Shield, RotateCcw, ExternalLink, Loader2, AlertTriangle, CheckCircle, Copy } from "lucide-react";
 import { AmazonIcon } from "@/components/icons/AmazonIcon";
 import { toast } from "sonner";
 
@@ -17,6 +24,9 @@ export default function ProductPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isBuying, setIsBuying] = useState(false);
+  const [showDebugModal, setShowDebugModal] = useState(false);
+  const [debugUrl, setDebugUrl] = useState<string | null>(null);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
@@ -46,39 +56,52 @@ export default function ProductPage() {
     toast.success("Produto adicionado ao carrinho!", { position: "top-center" });
   };
 
+  const handleCopyUrl = () => {
+    if (debugUrl) {
+      navigator.clipboard.writeText(debugUrl);
+      toast.success("URL copiada!", { position: "top-center" });
+    }
+  };
+
+  const handleOpenUrlManually = () => {
+    if (debugUrl) {
+      window.location.href = debugUrl;
+    }
+  };
+
   const handleBuyNow = async () => {
     if (!selectedVariant) return;
     setIsBuying(true);
+    setDebugUrl(null);
+    setCheckoutError(null);
+    
     try {
       const checkoutUrl = await createBuyNowCheckout(selectedVariant.id, quantity);
       
       console.log('[ProductPage] Checkout URL gerada:', checkoutUrl);
+      setDebugUrl(checkoutUrl);
       
       // Valida URL antes de abrir
       if (!isValidShopifyCheckoutUrl(checkoutUrl)) {
-        toast.error("URL de checkout inválida", {
-          description: `URL recebida: ${checkoutUrl}`,
-          position: "top-center",
-          duration: 10000,
-        });
+        setCheckoutError(`URL inválida: ${checkoutUrl}`);
+        setShowDebugModal(true);
         return;
       }
       
       // Abre com fallback para popup bloqueado
       const result = openCheckoutUrl(checkoutUrl);
       
-      if (!result.success) {
-        toast.error("Erro ao abrir checkout", {
-          description: result.error,
-          position: "top-center",
-        });
+      if (result.success) {
+        setShowDebugModal(true);
+      } else {
+        setCheckoutError(result.error || "Erro desconhecido");
+        setShowDebugModal(true);
       }
     } catch (error) {
       console.error('[ProductPage] Erro ao criar checkout:', error);
-      toast.error("Erro ao criar checkout", {
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        position: "top-center",
-      });
+      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+      setCheckoutError(errorMessage);
+      setShowDebugModal(true);
     } finally {
       setIsBuying(false);
     }
@@ -216,6 +239,72 @@ export default function ProductPage() {
         </div>
       </main>
       <Footer />
+
+      {/* Modal de Debug */}
+      <Dialog open={showDebugModal} onOpenChange={setShowDebugModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {checkoutError ? (
+                <>
+                  <AlertTriangle className="w-5 h-5 text-destructive" />
+                  Erro no Checkout
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Checkout Criado
+                </>
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              {checkoutError 
+                ? "Ocorreu um erro ao processar o checkout."
+                : "O checkout foi criado. Se não abriu automaticamente, clique abaixo."
+              }
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {checkoutError && (
+              <div className="p-3 bg-destructive/10 rounded-lg text-sm text-destructive">
+                {checkoutError}
+              </div>
+            )}
+
+            {debugUrl && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">URL gerada:</span>
+                  <Button variant="ghost" size="sm" className="h-7 px-2" onClick={handleCopyUrl}>
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copiar
+                  </Button>
+                </div>
+                <div className="p-2 bg-muted rounded text-xs break-all max-h-24 overflow-y-auto">
+                  {debugUrl}
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-2">
+              {debugUrl && (
+                <Button onClick={handleOpenUrlManually} variant="hero" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Abrir Checkout Manualmente
+                </Button>
+              )}
+              <Button 
+                onClick={() => setShowDebugModal(false)} 
+                variant="outline" 
+                className="w-full"
+              >
+                Fechar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

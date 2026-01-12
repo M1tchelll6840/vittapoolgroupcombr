@@ -8,7 +8,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2, Copy, CheckCircle } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2, Copy, CheckCircle, AlertTriangle, RefreshCw } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { openCheckoutUrl, isValidShopifyCheckoutUrl, createStorefrontCheckout } from "@/lib/shopify";
 import { toast } from "sonner";
@@ -28,6 +35,8 @@ export function CartDrawer() {
   } = useCartStore();
   
   const [debugUrl, setDebugUrl] = useState<string | null>(null);
+  const [showDebugModal, setShowDebugModal] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const totalItems = getTotalItems();
   const totalPrice = getTotalPrice();
@@ -39,11 +48,17 @@ export function CartDrawer() {
     }
   };
 
+  const handleClearLocalStorage = () => {
+    localStorage.removeItem('piscinas-inteligentes-cart');
+    window.location.reload();
+  };
+
   const handleCheckout = async () => {
     if (items.length === 0) return;
     
     setLoading(true);
     setDebugUrl(null);
+    setCheckoutError(null);
     
     try {
       // Gera URL diretamente (não usa estado antigo)
@@ -54,11 +69,8 @@ export function CartDrawer() {
       
       // Valida URL antes de abrir
       if (!isValidShopifyCheckoutUrl(checkoutUrl)) {
-        toast.error("URL de checkout inválida", {
-          description: `URL recebida: ${checkoutUrl}`,
-          position: "top-center",
-          duration: 10000,
-        });
+        setCheckoutError(`URL inválida: ${checkoutUrl}`);
+        setShowDebugModal(true);
         return;
       }
       
@@ -66,21 +78,25 @@ export function CartDrawer() {
       const result = openCheckoutUrl(checkoutUrl);
       
       if (result.success) {
-        setOpen(false);
+        // Mostra modal de debug para confirmação
+        setShowDebugModal(true);
       } else {
-        toast.error("Erro ao abrir checkout", {
-          description: result.error,
-          position: "top-center",
-        });
+        setCheckoutError(result.error || "Erro desconhecido");
+        setShowDebugModal(true);
       }
     } catch (error) {
       console.error("[CartDrawer] Checkout failed:", error);
-      toast.error("Erro ao criar checkout", {
-        description: error instanceof Error ? error.message : "Erro desconhecido",
-        position: "top-center",
-      });
+      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+      setCheckoutError(errorMessage);
+      setShowDebugModal(true);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOpenUrlManually = () => {
+    if (debugUrl) {
+      window.location.href = debugUrl;
     }
   };
 
@@ -233,27 +249,87 @@ export function CartDrawer() {
                   )}
                 </Button>
                 
-                {/* Debug: Mostra URL gerada */}
-                {debugUrl && (
-                  <div className="p-3 bg-muted rounded-lg text-xs">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3 text-green-500" />
-                        Checkout URL gerada:
-                      </span>
-                      <Button variant="ghost" size="sm" className="h-6 px-2" onClick={handleCopyUrl}>
-                        <Copy className="w-3 h-3 mr-1" />
-                        Copiar
-                      </Button>
-                    </div>
-                    <p className="break-all text-muted-foreground">{debugUrl}</p>
-                  </div>
-                )}
+                {/* Botão Limpar Cache */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-muted-foreground"
+                  onClick={handleClearLocalStorage}
+                >
+                  <RefreshCw className="w-3 h-3 mr-2" />
+                  Limpar carrinho (debug)
+                </Button>
               </div>
             </>
           )}
         </div>
       </SheetContent>
+
+      {/* Modal de Debug */}
+      <Dialog open={showDebugModal} onOpenChange={setShowDebugModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {checkoutError ? (
+                <>
+                  <AlertTriangle className="w-5 h-5 text-destructive" />
+                  Erro no Checkout
+                </>
+              ) : (
+                <>
+                  <CheckCircle className="w-5 h-5 text-green-500" />
+                  Checkout Criado
+                </>
+              )}
+            </DialogTitle>
+            <DialogDescription>
+              {checkoutError 
+                ? "Ocorreu um erro ao processar o checkout. Use as opções abaixo para tentar novamente."
+                : "O checkout foi criado com sucesso. Se não abriu automaticamente, use o botão abaixo."
+              }
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            {checkoutError && (
+              <div className="p-3 bg-destructive/10 rounded-lg text-sm text-destructive">
+                {checkoutError}
+              </div>
+            )}
+
+            {debugUrl && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">URL gerada:</span>
+                  <Button variant="ghost" size="sm" className="h-7 px-2" onClick={handleCopyUrl}>
+                    <Copy className="w-3 h-3 mr-1" />
+                    Copiar
+                  </Button>
+                </div>
+                <div className="p-2 bg-muted rounded text-xs break-all max-h-24 overflow-y-auto">
+                  {debugUrl}
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col gap-2">
+              {debugUrl && (
+                <Button onClick={handleOpenUrlManually} variant="hero" className="w-full">
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Abrir Checkout Manualmente
+                </Button>
+              )}
+              <Button 
+                onClick={() => setShowDebugModal(false)} 
+                variant="outline" 
+                className="w-full"
+              >
+                Fechar
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Sheet>
   );
 }
