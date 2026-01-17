@@ -215,25 +215,43 @@ export default function ProductPage() {
                   <ShoppingCart className="w-5 h-5 mr-2" />
                   Adicionar
                 </Button>
-                <Button 
-                  variant="hero" 
-                  size="xl" 
-                  className="flex-1 min-h-[52px] relative overflow-hidden group/btn"
-                  onClick={handleBuyNow} 
-                  disabled={isBuying}
-                >
-                  {isBuying ? (
-                    <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                      Processando...
-                    </>
-                  ) : (
-                    <>
+                {amazonLink ? (
+                  <Button 
+                    variant="hero" 
+                    size="xl" 
+                    className="flex-1 min-h-[52px] relative overflow-hidden group/btn"
+                    asChild
+                  >
+                    <a
+                      href={amazonLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <Zap className="w-5 h-5 mr-2 group-hover/btn:animate-pulse" />
                       Compre Agora
-                    </>
-                  )}
-                </Button>
+                    </a>
+                  </Button>
+                ) : (
+                  <Button 
+                    variant="hero" 
+                    size="xl" 
+                    className="flex-1 min-h-[52px] relative overflow-hidden group/btn"
+                    onClick={handleBuyNow} 
+                    disabled={isBuying}
+                  >
+                    {isBuying ? (
+                      <>
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        Processando...
+                      </>
+                    ) : (
+                      <>
+                        <Zap className="w-5 h-5 mr-2 group-hover/btn:animate-pulse" />
+                        Compre Agora
+                      </>
+                    )}
+                  </Button>
+                )}
               </div>
 
               {/* Linha 3: Ver Na Amazon (apenas se tiver link) */}

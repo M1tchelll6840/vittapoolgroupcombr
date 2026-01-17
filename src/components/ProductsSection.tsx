@@ -203,23 +203,42 @@ export function ProductsSection() {
                           <ShoppingCart className="w-4 h-4 mr-1" aria-hidden="true" />
                           Adicionar
                         </Button>
-                        <Button
-                          variant="hero"
-                          size="sm"
-                          className="flex-1 min-h-[44px] group/btn"
-                          onClick={() => handleBuyNow(product)}
-                          disabled={isBuying}
-                          aria-label={`Comprar ${product.node.title} agora`}
-                        >
-                          {isBuying ? (
-                            <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-                          ) : (
-                            <>
+                        {amazonLink ? (
+                          <Button
+                            variant="hero"
+                            size="sm"
+                            className="flex-1 min-h-[44px] group/btn"
+                            asChild
+                          >
+                            <a
+                              href={amazonLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`Comprar ${product.node.title} na Amazon - abre em nova aba`}
+                            >
                               <Zap className="w-4 h-4 mr-1 group-hover/btn:animate-pulse" aria-hidden="true" />
                               Comprar
-                            </>
-                          )}
-                        </Button>
+                            </a>
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="hero"
+                            size="sm"
+                            className="flex-1 min-h-[44px] group/btn"
+                            onClick={() => handleBuyNow(product)}
+                            disabled={isBuying}
+                            aria-label={`Comprar ${product.node.title} agora`}
+                          >
+                            {isBuying ? (
+                              <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                            ) : (
+                              <>
+                                <Zap className="w-4 h-4 mr-1 group-hover/btn:animate-pulse" aria-hidden="true" />
+                                Comprar
+                              </>
+                            )}
+                          </Button>
+                        )}
                       </div>
 
                       {/* Linha 2: Ver Na Amazon (apenas se tiver link) */}
