@@ -4,8 +4,16 @@ const SHOPIFY_API_VERSION = '2025-07';
 const SHOPIFY_STORE_PERMANENT_DOMAIN = 'sdrum3-11.myshopify.com';
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 
-// Token carregado de variável de ambiente (injetado automaticamente pelo Lovable)
-const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN || '';
+// Token carregado de variável de ambiente
+// Tenta VITE_ primeiro (dev local), depois sem prefixo (injeção Lovable)
+const SHOPIFY_STOREFRONT_TOKEN = 
+  import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN || 
+  import.meta.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN || 
+  '';
+
+if (!SHOPIFY_STOREFRONT_TOKEN && typeof window !== 'undefined') {
+  console.warn('[Shopify] Token não configurado. Verifique variáveis de ambiente.');
+}
 
 export interface ShopifyProduct {
   node: {
