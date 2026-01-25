@@ -282,8 +282,13 @@ export interface CartItem {
 export function isValidShopifyCheckoutUrl(url: string): boolean {
   if (!url || typeof url !== 'string') return false;
   if (!url.startsWith('http://') && !url.startsWith('https://')) return false;
-  // Aceita domínios do Shopify
-  const validDomains = ['myshopify.com', 'shopify.com', 'checkout.shopify.com'];
+  // Aceita domínios do Shopify e domínio customizado
+  const validDomains = [
+    'myshopify.com', 
+    'shopify.com', 
+    'checkout.shopify.com',
+    'vittapoolgroup.com.br'
+  ];
   try {
     const parsed = new URL(url);
     return validDomains.some(domain => parsed.hostname.includes(domain));
