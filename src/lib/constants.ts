@@ -11,5 +11,8 @@ export const COMPANY_INFO = {
   city: "Salvador – BA, Brasil",
   cep: "41820-021",
   location: "Salvador Shopping, Salvador – BA",
-  hours: "Seg - Sex: 9h às 18h"
+  hours: "Seg - Sex: 9h às 18h",
+  // Domínios
+  domain: "vittapoolgroup.com.br",
+  siteUrl: "https://vittapoolgroup.com.br",
 } as const;
