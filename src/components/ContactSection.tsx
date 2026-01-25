@@ -50,7 +50,7 @@ export function ContactSection() {
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Info */}
           <div>
-            <span className="text-sm font-medium text-primary uppercase tracking-wider">
+            <span className="text-sm font-medium text-primary uppercase tracking-wider" aria-hidden="true">
               Contato
             </span>
             <h2 id="contato-titulo" className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">

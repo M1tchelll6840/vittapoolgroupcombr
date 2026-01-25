@@ -149,8 +149,8 @@ export default function ProductPage() {
     <div className="min-h-screen bg-background">
       <Header />
       <main className="container mx-auto px-4 pt-28 pb-20">
-        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8">
-          <ArrowLeft className="w-4 h-4" /> Voltar
+        <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 min-h-[44px] py-2">
+          <ArrowLeft className="w-4 h-4" aria-hidden="true" /> Voltar
         </Link>
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -158,16 +158,38 @@ export default function ProductPage() {
           <div>
             <div className="aspect-square bg-muted rounded-2xl overflow-hidden mb-4">
               {images[selectedImage]?.node ? (
-                <img src={images[selectedImage].node.url} alt={product.title} className="w-full h-full object-cover" />
+                <img 
+                  src={images[selectedImage].node.url} 
+                  alt={images[selectedImage].node.altText || product.title} 
+                  className="w-full h-full object-cover"
+                  width={600}
+                  height={600}
+                  loading="eager"
+                />
               ) : (
-                <div className="w-full h-full flex items-center justify-center"><Package className="w-16 h-16 text-muted-foreground" /></div>
+                <div className="w-full h-full flex items-center justify-center">
+                  <Package className="w-16 h-16 text-muted-foreground" aria-hidden="true" />
+                </div>
               )}
             </div>
             {images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto">
+              <div className="flex gap-2 overflow-x-auto" role="group" aria-label="Miniaturas das imagens do produto">
                 {images.map((img: any, i: number) => (
-                  <button key={i} onClick={() => setSelectedImage(i)} className={`w-20 h-20 rounded-lg overflow-hidden border-2 ${i === selectedImage ? "border-primary" : "border-transparent"}`}>
-                    <img src={img.node.url} alt="" className="w-full h-full object-cover" />
+                  <button 
+                    key={i} 
+                    onClick={() => setSelectedImage(i)} 
+                    className={`w-20 h-20 min-w-[80px] min-h-[80px] rounded-lg overflow-hidden border-2 ${i === selectedImage ? "border-primary" : "border-transparent"}`}
+                    aria-label={`Ver imagem ${i + 1} de ${images.length}`}
+                    aria-pressed={i === selectedImage}
+                  >
+                    <img 
+                      src={img.node.url} 
+                      alt="" 
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      width={80}
+                      height={80}
+                    />
                   </button>
                 ))}
               </div>
@@ -181,12 +203,28 @@ export default function ProductPage() {
             <p className="text-muted-foreground mb-8">{product.description}</p>
 
             {/* Quantity */}
-            <div className="flex items-center gap-4 mb-6">
-              <span className="font-medium">Quantidade:</span>
+            <div className="flex items-center gap-4 mb-6" role="group" aria-label="Selecionar quantidade">
+              <span className="font-medium" id="quantity-label">Quantidade:</span>
               <div className="flex items-center gap-2">
-                <Button variant="outline" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus className="w-4 h-4" /></Button>
-                <span className="w-12 text-center font-medium">{quantity}</span>
-                <Button variant="outline" size="icon" onClick={() => setQuantity(quantity + 1)}><Plus className="w-4 h-4" /></Button>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="min-w-[44px] min-h-[44px]"
+                  aria-label="Diminuir quantidade"
+                >
+                  <Minus className="w-4 h-4" aria-hidden="true" />
+                </Button>
+                <span className="w-12 text-center font-medium" aria-live="polite" aria-atomic="true">{quantity}</span>
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="min-w-[44px] min-h-[44px]"
+                  aria-label="Aumentar quantidade"
+                >
+                  <Plus className="w-4 h-4" aria-hidden="true" />
+                </Button>
               </div>
             </div>
 
@@ -203,16 +241,23 @@ export default function ProductPage() {
                   href={`${COMPANY_INFO.whatsappLink}?text=Olá! Tenho interesse no produto: ${encodeURIComponent(product.title)}`}
                   target="_blank" 
                   rel="noopener noreferrer"
+                  aria-label={`Falar com especialista sobre ${product.title} via WhatsApp - abre em nova aba`}
                 >
-                  <MessageCircle className="w-5 h-5 mr-2" />
+                  <MessageCircle className="w-5 h-5 mr-2" aria-hidden="true" />
                   Falar com Especialista
                 </a>
               </Button>
 
               {/* Linha 2: Adicionar + Compre Agora */}
               <div className="flex gap-3">
-                <Button variant="outline" size="xl" className="flex-1 min-h-[52px]" onClick={handleAddToCart}>
-                  <ShoppingCart className="w-5 h-5 mr-2" />
+                <Button 
+                  variant="outline" 
+                  size="xl" 
+                  className="flex-1 min-h-[52px]" 
+                  onClick={handleAddToCart}
+                  aria-label={`Adicionar ${product.title} ao carrinho`}
+                >
+                  <ShoppingCart className="w-5 h-5 mr-2" aria-hidden="true" />
                   Adicionar
                 </Button>
                 {amazonLink ? (
@@ -226,8 +271,9 @@ export default function ProductPage() {
                       href={amazonLink}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`Comprar ${product.title} na Amazon - abre em nova aba`}
                     >
-                      <Zap className="w-5 h-5 mr-2 group-hover/btn:animate-pulse" />
+                      <Zap className="w-5 h-5 mr-2 group-hover/btn:animate-pulse" aria-hidden="true" />
                       Compre Agora
                     </a>
                   </Button>
@@ -238,15 +284,16 @@ export default function ProductPage() {
                     className="flex-1 min-h-[52px] relative overflow-hidden group/btn"
                     onClick={handleBuyNow} 
                     disabled={isBuying}
+                    aria-label={isBuying ? "Processando compra" : `Comprar ${product.title} agora`}
                   >
                     {isBuying ? (
                       <>
-                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                        <Loader2 className="w-5 h-5 mr-2 animate-spin" aria-hidden="true" />
                         Processando...
                       </>
                     ) : (
                       <>
-                        <Zap className="w-5 h-5 mr-2 group-hover/btn:animate-pulse" />
+                        <Zap className="w-5 h-5 mr-2 group-hover/btn:animate-pulse" aria-hidden="true" />
                         Compre Agora
                       </>
                     )}
@@ -257,10 +304,15 @@ export default function ProductPage() {
               {/* Linha 3: Ver Na Amazon (apenas se tiver link) */}
               {amazonLink && (
                 <Button variant="amazon" size="xl" className="w-full min-h-[52px]" asChild>
-                  <a href={amazonLink} target="_blank" rel="noopener noreferrer">
-                    <AmazonIcon className="w-5 h-5 mr-2" />
+                  <a 
+                    href={amazonLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    aria-label={`Ver ${product.title} na Amazon - abre em nova aba`}
+                  >
+                    <AmazonIcon className="w-5 h-5 mr-2" aria-hidden="true" />
                     Ver Na Amazon
-                    <ExternalLink className="w-5 h-5 ml-2" />
+                    <ExternalLink className="w-5 h-5 ml-2" aria-hidden="true" />
                   </a>
                 </Button>
               )}
@@ -268,29 +320,29 @@ export default function ProductPage() {
               {/* Badge de Pagamento Seguro */}
               <div className="flex items-center justify-center gap-3 pt-2">
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Lock className="w-3.5 h-3.5 text-green-600" />
+                  <Lock className="w-3.5 h-3.5 text-accent" aria-hidden="true" />
                   <span>Compra 100% Segura</span>
                 </div>
-                <div className="h-4 w-px bg-border" />
+                <div className="h-4 w-px bg-border" aria-hidden="true" />
                 <div className="flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-muted-foreground" />
+                  <CreditCard className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
                   <span className="text-xs text-muted-foreground">Pix • Cartão • PayPal</span>
                 </div>
               </div>
             </div>
 
             {/* Trust Badges */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-secondary/50 rounded-xl">
-                <Truck className="w-5 h-5 mx-auto mb-2 text-primary" />
+            <div className="grid grid-cols-3 gap-4" role="list" aria-label="Benefícios da compra">
+              <div className="text-center p-4 bg-secondary/50 rounded-xl" role="listitem">
+                <Truck className="w-5 h-5 mx-auto mb-2 text-primary" aria-hidden="true" />
                 <span className="text-xs font-medium">Frete Grátis</span>
               </div>
-              <div className="text-center p-4 bg-secondary/50 rounded-xl">
-                <Shield className="w-5 h-5 mx-auto mb-2 text-primary" />
+              <div className="text-center p-4 bg-secondary/50 rounded-xl" role="listitem">
+                <Shield className="w-5 h-5 mx-auto mb-2 text-primary" aria-hidden="true" />
                 <span className="text-xs font-medium">Garantia 2 Anos</span>
               </div>
-              <div className="text-center p-4 bg-secondary/50 rounded-xl">
-                <RotateCcw className="w-5 h-5 mx-auto mb-2 text-primary" />
+              <div className="text-center p-4 bg-secondary/50 rounded-xl" role="listitem">
+                <RotateCcw className="w-5 h-5 mx-auto mb-2 text-primary" aria-hidden="true" />
                 <span className="text-xs font-medium">Troca Fácil</span>
               </div>
             </div>

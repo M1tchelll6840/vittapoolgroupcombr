@@ -29,14 +29,14 @@ const audiences = [
 
 export function AudienceSection() {
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 bg-background" aria-labelledby="perfis-titulo">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="text-sm font-medium text-primary uppercase tracking-wider">
+          <span className="text-sm font-medium text-primary uppercase tracking-wider" aria-hidden="true">
             Para Todos os Perfis
           </span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
+          <h2 id="perfis-titulo" className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
             Para quem é a <span className="text-gradient">VittaPool Group</span>?
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -61,7 +61,7 @@ export function AudienceSection() {
               {/* Content */}
               <div className="relative z-10 flex gap-5">
                 <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${audience.color} flex items-center justify-center flex-shrink-0 shadow-soft group-hover:shadow-glow transition-shadow duration-300`}>
-                  <audience.icon className="w-7 h-7 text-primary-foreground" />
+                  <audience.icon className="w-7 h-7 text-primary-foreground" aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="font-display text-xl font-semibold mb-2 group-hover:text-primary transition-colors">

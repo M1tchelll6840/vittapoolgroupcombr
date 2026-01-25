@@ -53,18 +53,18 @@ const faqs = [
 
 export function FAQSection() {
   return (
-    <section id="faq" className="py-20 bg-gradient-surface">
+    <section id="faq" className="py-20 bg-gradient-surface" aria-labelledby="faq-titulo">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
-              <HelpCircle className="w-4 h-4 text-primary" />
+              <HelpCircle className="w-4 h-4 text-primary" aria-hidden="true" />
               <span className="text-sm font-medium text-primary">
                 Tire suas dúvidas
               </span>
             </div>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+            <h2 id="faq-titulo" className="font-display text-3xl md:text-4xl font-bold mb-4">
               Perguntas <span className="text-gradient">frequentes</span>
             </h2>
             <p className="text-muted-foreground">
@@ -93,10 +93,10 @@ export function FAQSection() {
 
           {/* Link to full FAQ page */}
           <div className="text-center mt-10">
-            <Button variant="outline" size="lg" asChild>
+            <Button variant="outline" size="lg" className="min-h-[44px]" asChild>
               <Link to="/faq" className="group">
                 Ver todas as perguntas
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </Link>
             </Button>
           </div>

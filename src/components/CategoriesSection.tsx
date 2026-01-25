@@ -41,7 +41,7 @@ export function CategoriesSection() {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="text-sm font-medium text-primary uppercase tracking-wider">
+          <span className="text-sm font-medium text-primary uppercase tracking-wider" aria-hidden="true">
             O Que Oferecemos
           </span>
           <h2 id="categorias-titulo" className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">

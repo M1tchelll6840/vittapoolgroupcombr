@@ -30,14 +30,14 @@ const reasons = [
 
 export function WhyChooseSection() {
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-20 bg-muted/30" aria-labelledby="diferenciais-titulo">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <span className="text-sm font-medium text-primary uppercase tracking-wider">
+          <span className="text-sm font-medium text-primary uppercase tracking-wider" aria-hidden="true">
             Nossos Diferenciais
           </span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
+          <h2 id="diferenciais-titulo" className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
             Por que escolher a <span className="text-gradient">VittaPool Group</span>?
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -46,15 +46,16 @@ export function WhyChooseSection() {
         </div>
 
         {/* Reasons Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" role="list" aria-label="Lista de diferenciais">
           {reasons.map((reason, index) => (
             <div
               key={reason.title}
               className="group p-6 rounded-2xl bg-background border border-border hover:border-primary/30 hover:shadow-card transition-all duration-300 animate-fade-in"
               style={{ animationDelay: `${index * 100}ms` }}
+              role="listitem"
             >
               <div className="w-12 h-12 rounded-xl bg-gradient-water flex items-center justify-center mb-4 group-hover:shadow-glow transition-shadow duration-300">
-                <reason.icon className="w-6 h-6 text-primary-foreground" />
+                <reason.icon className="w-6 h-6 text-primary-foreground" aria-hidden="true" />
               </div>
               <h3 className="font-display text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
                 {reason.title}

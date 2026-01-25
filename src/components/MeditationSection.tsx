@@ -37,7 +37,7 @@ export function MeditationSection() {
             Diversão e <span className="text-gradient">relaxamento</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Nossas boias rebocáveis e espreguiçadeiras infláveis são projetadas para proporcionar 
+            Nossas boias rebocáveis e espreguiçadeiras infláveis são projetadas para proporcionar
             momentos de diversão e relaxamento sob o sol.
           </p>
         </div>
@@ -77,7 +77,7 @@ export function MeditationSection() {
                   <benefit.icon className="w-6 h-6 text-primary-foreground" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-1">{benefit.title}</h3>
+                  <h3 className="font-medium mb-1">{benefit.title}</h3>
                   <p className="text-sm text-muted-foreground">
                     {benefit.description}
                   </p>
