@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShopifyProduct, fetchProducts, createBuyNowCheckout, openCheckoutUrl, isValidShopifyCheckoutUrl } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingCart, Package, ExternalLink, Loader2, Zap } from "lucide-react";
+import { ShoppingCart, Package, ExternalLink, Loader2, Zap, MessageCircle } from "lucide-react";
 import { AmazonIcon } from "@/components/icons/AmazonIcon";
+import { COMPANY_INFO } from "@/lib/constants";
 import { toast } from "sonner";
 
 export function ProductsSection() {
@@ -130,7 +131,15 @@ export function ProductsSection() {
               Estamos preparando nosso catálogo. Em breve você encontrará as melhores piscinas e banheiras aqui!
             </p>
             <Button variant="hero" className="min-h-[44px]" asChild>
-              <a href="#contato">Solicitar Catálogo</a>
+              <a
+                href={COMPANY_INFO.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Falar no WhatsApp - abre em nova aba"
+              >
+                <MessageCircle className="w-5 h-5 mr-2" aria-hidden="true" />
+                Falar no WhatsApp
+              </a>
             </Button>
           </div>
         )}

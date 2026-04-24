@@ -1,4 +1,5 @@
-import { Heart, Wallet, ShoppingCart, Users, Truck } from "lucide-react";
+import { Heart, Wallet, ShoppingCart, Users, Truck, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const reasons = [
   {
@@ -65,6 +66,16 @@ export function WhyChooseSection() {
               </p>
             </div>
           ))}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-12">
+          <Button variant="hero" size="lg" className="min-h-[44px]" asChild>
+            <a href="#produtos">
+              Ver Produtos
+              <ArrowRight className="w-5 h-5 ml-2" aria-hidden="true" />
+            </a>
+          </Button>
         </div>
       </div>
     </section>

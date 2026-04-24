@@ -94,7 +94,7 @@ export function ApartmentSection() {
             </div>
 
             <Button variant="hero" size="lg" className="min-h-[44px]" asChild>
-              <a href="#produtos">Ver Modelos Compactos</a>
+              <a href="#produtos">Ver Produtos</a>
             </Button>
           </div>
         </div>
