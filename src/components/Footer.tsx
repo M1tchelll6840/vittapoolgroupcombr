@@ -11,8 +11,6 @@ const footerLinks = {
   empresa: [
     { label: "Sobre Nós", href: "/sobre" },
     { label: "Contato", href: "/contato" },
-    { label: "Blog", href: "#" },
-    { label: "Trabalhe Conosco", href: "#" },
   ],
   suporte: [
     { label: "Perguntas Frequentes", href: "/faq" },
@@ -156,10 +154,17 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Affiliate disclosure */}
+        <div className="pt-8 border-t border-background/10">
+          <p className="text-xs text-background/50 text-center mb-4">
+            Como Associado Amazon, recebemos comissões em compras qualificadas.
+          </p>
+        </div>
+
         {/* Bottom */}
-        <div className="pt-8 border-t border-background/10 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-background/60">
-            © 2025 VittaPool Group. Todos os direitos reservados.
+            © 2026 VittaPool Group. Todos os direitos reservados.
           </p>
           <nav className="flex gap-6 text-sm text-background/60" aria-label="Links legais">
             <a href="/termos" className="hover:text-primary transition-colors min-h-[44px] py-2 inline-flex items-center">

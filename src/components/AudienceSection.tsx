@@ -1,4 +1,5 @@
-import { Users, Home, Sparkles, Building2 } from "lucide-react";
+import { Users, Home, Sparkles, Building2, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const audiences = [
   {
@@ -74,6 +75,16 @@ export function AudienceSection() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* CTA */}
+        <div className="text-center mt-12">
+          <Button variant="hero" size="lg" className="min-h-[44px]" asChild>
+            <a href="#produtos">
+              Ver Produtos
+              <ArrowRight className="w-5 h-5 ml-2" aria-hidden="true" />
+            </a>
+          </Button>
         </div>
       </div>
     </section>

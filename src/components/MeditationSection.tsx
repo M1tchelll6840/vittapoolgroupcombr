@@ -86,7 +86,7 @@ export function MeditationSection() {
             ))}
 
             <Button variant="accent" size="lg" className="mt-4 min-h-[44px]" asChild>
-              <a href="#produtos">Explorar Coleção Wellness</a>
+              <a href="#produtos">Ver Produtos</a>
             </Button>
           </div>
 

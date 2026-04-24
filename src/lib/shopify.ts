@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 
 const SHOPIFY_API_VERSION = '2025-07';
-const SHOPIFY_STORE_PERMANENT_DOMAIN = 'sdrum3-11.myshopify.com';
+const SHOPIFY_STORE_PERMANENT_DOMAIN = 'vittapool-group.myshopify.com';
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 
 // Token carregado de variável de ambiente

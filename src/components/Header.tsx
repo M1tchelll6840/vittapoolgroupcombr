@@ -9,7 +9,6 @@ import { CartDrawer } from "./CartDrawer";
 const navLinks = [
   { href: "/", label: "Início" },
   { href: "/sobre", label: "Sobre Nós" },
-  { href: "/#categorias", label: "Categorias" },
   { href: "/#produtos", label: "Produtos" },
   { href: "/faq", label: "FAQ" },
   { href: "/contato", label: "Contato" },
@@ -58,7 +57,7 @@ export function Header() {
           {/* Actions */}
           <div className="flex items-center gap-3">
             <Button variant="hero" size="sm" className="hidden md:flex min-h-[44px]" asChild>
-              <a href="#contato">Solicitar Orçamento</a>
+              <a href="/#produtos">Ver Produtos</a>
             </Button>
 
             <CartDrawer />
@@ -100,7 +99,7 @@ export function Header() {
                   </nav>
 
                   <Button variant="hero" size="lg" className="mt-4 min-h-[44px]" asChild>
-                    <a href="#contato">Solicitar Orçamento</a>
+                    <a href="/#produtos" onClick={() => setMobileMenuOpen(false)}>Ver Produtos</a>
                   </Button>
                 </div>
               </SheetContent>
