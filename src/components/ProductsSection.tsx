@@ -131,8 +131,24 @@ export function ProductsSection() {
           </div>
         )}
 
+        {/* Error State */}
+        {!loading && error && (
+          <div className="max-w-2xl mx-auto">
+            <Alert variant="destructive">
+              <AlertCircle className="h-5 w-5" />
+              <AlertTitle>Erro ao carregar produtos da Shopify</AlertTitle>
+              <AlertDescription className="mt-2 space-y-2">
+                <p className="font-mono text-xs break-words">{error}</p>
+                <p className="text-sm">
+                  Abra o console do navegador (F12) para ver os logs detalhados começando com <code className="font-mono">[Shopify API]</code>.
+                </p>
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
         {/* Empty State */}
-        {!loading && products.length === 0 && (
+        {!loading && !error && products.length === 0 && (
           <div className="text-center py-20">
             <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-muted flex items-center justify-center">
               <Package className="w-10 h-10 text-muted-foreground" aria-hidden="true" />
