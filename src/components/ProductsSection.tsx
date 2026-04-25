@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { ShopifyProduct, fetchProducts, createBuyNowCheckout, openCheckoutUrl, isValidShopifyCheckoutUrl } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingCart, Package, ExternalLink, Loader2, Zap, MessageCircle } from "lucide-react";
+import { ShoppingCart, Package, ExternalLink, Loader2, Zap, MessageCircle, AlertCircle } from "lucide-react";
 import { AmazonIcon } from "@/components/icons/AmazonIcon";
 import { COMPANY_INFO } from "@/lib/constants";
 import { toast } from "sonner";
@@ -11,15 +12,27 @@ import { toast } from "sonner";
 export function ProductsSection() {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [buyingProductId, setBuyingProductId] = useState<string | null>(null);
   const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
     async function loadProducts() {
       setLoading(true);
-      const data = await fetchProducts(12);
-      setProducts(data);
-      setLoading(false);
+      setError(null);
+      try {
+        const data = await fetchProducts(12);
+        setProducts(data);
+        if (data.length === 0) {
+          console.warn('[ProductsSection] Nenhum produto retornado pela API.');
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Erro desconhecido';
+        console.error('[ProductsSection] Falha ao carregar produtos:', err);
+        setError(message);
+      } finally {
+        setLoading(false);
+      }
     }
     loadProducts();
   }, []);
@@ -118,8 +131,24 @@ export function ProductsSection() {
           </div>
         )}
 
+        {/* Error State */}
+        {!loading && error && (
+          <div className="max-w-2xl mx-auto">
+            <Alert variant="destructive">
+              <AlertCircle className="h-5 w-5" />
+              <AlertTitle>Erro ao carregar produtos da Shopify</AlertTitle>
+              <AlertDescription className="mt-2 space-y-2">
+                <p className="font-mono text-xs break-words">{error}</p>
+                <p className="text-sm">
+                  Abra o console do navegador (F12) para ver os logs detalhados começando com <code className="font-mono">[Shopify API]</code>.
+                </p>
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
+
         {/* Empty State */}
-        {!loading && products.length === 0 && (
+        {!loading && !error && products.length === 0 && (
           <div className="text-center py-20">
             <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-muted flex items-center justify-center">
               <Package className="w-10 h-10 text-muted-foreground" aria-hidden="true" />
