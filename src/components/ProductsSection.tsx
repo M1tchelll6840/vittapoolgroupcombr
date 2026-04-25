@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { ShopifyProduct, fetchProducts, createBuyNowCheckout, openCheckoutUrl, isValidShopifyCheckoutUrl } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
-import { ShoppingCart, Package, ExternalLink, Loader2, Zap, MessageCircle } from "lucide-react";
+import { ShoppingCart, Package, ExternalLink, Loader2, Zap, MessageCircle, AlertCircle } from "lucide-react";
 import { AmazonIcon } from "@/components/icons/AmazonIcon";
 import { COMPANY_INFO } from "@/lib/constants";
 import { toast } from "sonner";
@@ -11,15 +12,27 @@ import { toast } from "sonner";
 export function ProductsSection() {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [buyingProductId, setBuyingProductId] = useState<string | null>(null);
   const addItem = useCartStore((state) => state.addItem);
 
   useEffect(() => {
     async function loadProducts() {
       setLoading(true);
-      const data = await fetchProducts(12);
-      setProducts(data);
-      setLoading(false);
+      setError(null);
+      try {
+        const data = await fetchProducts(12);
+        setProducts(data);
+        if (data.length === 0) {
+          console.warn('[ProductsSection] Nenhum produto retornado pela API.');
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Erro desconhecido';
+        console.error('[ProductsSection] Falha ao carregar produtos:', err);
+        setError(message);
+      } finally {
+        setLoading(false);
+      }
     }
     loadProducts();
   }, []);
