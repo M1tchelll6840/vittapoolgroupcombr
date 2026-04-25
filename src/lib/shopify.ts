@@ -208,48 +208,74 @@ const CART_CREATE_MUTATION = `
   }
 `;
 
+export class ShopifyApiError extends Error {
+  constructor(message: string, public details?: unknown) {
+    super(message);
+    this.name = 'ShopifyApiError';
+  }
+}
+
 export async function storefrontApiRequest(query: string, variables: Record<string, unknown> = {}) {
-  const response = await fetch(SHOPIFY_STOREFRONT_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN
-    },
-    body: JSON.stringify({
-      query,
-      variables,
-    }),
-  });
+  console.log('[Shopify API] Request →', SHOPIFY_STOREFRONT_URL, { variables, hasToken: !!SHOPIFY_STOREFRONT_TOKEN });
+
+  if (!SHOPIFY_STOREFRONT_TOKEN) {
+    throw new ShopifyApiError('Storefront Access Token não configurado. Configure SHOPIFY_STOREFRONT_ACCESS_TOKEN nos secrets.');
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(SHOPIFY_STOREFRONT_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': SHOPIFY_STOREFRONT_TOKEN,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+  } catch (networkError) {
+    console.error('[Shopify API] Erro de rede:', networkError);
+    throw new ShopifyApiError(`Erro de rede ao conectar à Shopify: ${networkError instanceof Error ? networkError.message : 'desconhecido'}`);
+  }
+
+  console.log('[Shopify API] Response status:', response.status);
+
+  if (response.status === 401 || response.status === 403) {
+    throw new ShopifyApiError(`Token Storefront inválido ou sem permissão (HTTP ${response.status}). Verifique o SHOPIFY_STOREFRONT_ACCESS_TOKEN.`);
+  }
 
   if (response.status === 402) {
-    toast.error("Shopify: Payment required", {
-      description: "Shopify API access requires an active Shopify billing plan."
-    });
-    return null;
+    throw new ShopifyApiError('Shopify: Plano de cobrança ativo é necessário para acessar a API.');
   }
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    throw new ShopifyApiError(`HTTP ${response.status} ao chamar Shopify`);
   }
 
   const data = await response.json();
-  
-  if (data.errors) {
-    throw new Error(`Error calling Shopify: ${data.errors.map((e: { message: string }) => e.message).join(', ')}`);
+  console.log('[Shopify API] Response data:', { hasData: !!data.data, errorCount: data.errors?.length || 0 });
+
+  // Erros parciais (ex: metafield sem permissão) — só falham se NÃO houver dados úteis
+  if (data.errors && data.errors.length > 0) {
+    const allAccessDenied = data.errors.every((e: { extensions?: { code?: string } }) => e.extensions?.code === 'ACCESS_DENIED');
+    const hasUsefulData = !!data.data && Object.values(data.data).some((v) => v !== null);
+
+    if (allAccessDenied && hasUsefulData) {
+      console.warn('[Shopify API] Erros parciais ignorados (permissões de metafield):', data.errors.map((e: { message: string }) => e.message));
+    } else {
+      const messages = data.errors.map((e: { message: string }) => e.message).join('; ');
+      throw new ShopifyApiError(`Erro Shopify: ${messages}`, data.errors);
+    }
   }
 
   return data;
 }
 
 export async function fetchProducts(first: number = 20, query?: string): Promise<ShopifyProduct[]> {
-  try {
-    const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
-    if (!data) return [];
-    return data.data.products.edges || [];
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    return [];
-  }
+  const data = await storefrontApiRequest(STOREFRONT_QUERY, { first, query });
+  if (!data) return [];
+  const edges = data.data?.products?.edges || [];
+  console.log(`[Shopify API] ${edges.length} produtos carregados`);
+  return edges;
 }
 
 export async function fetchProductByHandle(handle: string) {
